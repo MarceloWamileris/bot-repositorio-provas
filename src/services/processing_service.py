@@ -31,20 +31,14 @@ class ProcessingService:
 
                 print("→ PDF identificado.")
 
-                await OCRService.ler_pdf(
-                    arquivo["caminho"],
-                )
-
-                print()
-
             elif arquivo["tipo"] == "imagem":
 
                 print("→ Imagem identificada.")
 
-                await OCRService.ler_imagem(
-                    arquivo["caminho"],
-                )
+            await OCRService.extrair_texto(
+                arquivo["caminho"],
+            )
 
-                print()
+            print()
 
         print("==================================\n")

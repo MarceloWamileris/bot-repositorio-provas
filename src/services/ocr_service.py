@@ -1,21 +1,19 @@
 class OCRService:
 
     @classmethod
-    async def ler_pdf(
+    async def extrair_texto(
         cls,
         caminho,
     ):
 
         print(
-            f"OCR PDF: {caminho}"
+            f"OCR: {caminho}"
         )
 
-    @classmethod
-    async def ler_imagem(
-        cls,
-        caminho,
-    ):
+        texto = ""
 
         print(
-            f"OCR Imagem: {caminho}"
+            f"Texto extraído: {texto}"
         )
+
+        return texto

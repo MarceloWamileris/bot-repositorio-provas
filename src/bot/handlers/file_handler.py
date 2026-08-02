@@ -3,7 +3,6 @@ from telegram.ext import ContextTypes
 
 from messages.upload import MENSAGEM_UPLOAD
 from bot.keyboards.finish_keyboard import teclado_finalizar
-from services.file_service import FileService
 
 
 async def receber_arquivo(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -11,16 +10,22 @@ async def receber_arquivo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if "arquivos" not in context.user_data:
         context.user_data["arquivos"] = []
 
+    pasta_envio = context.user_data["pasta_envio"]
+
     if update.message.document:
         arquivo = update.message.document
 
-        pasta_usuario = FileService.criar_pasta_usuario(
-            update.effective_user.id
-        )
-
         telegram_file = await arquivo.get_file()
 
-        caminho = pasta_usuario / arquivo.file_name
+        quantidade_pdfs = sum(
+            1
+            for arquivo_salvo in context.user_data["arquivos"]
+            if arquivo_salvo["tipo"] == "pdf"
+        )
+
+        nome_arquivo = f"pdf_{quantidade_pdfs + 1}.pdf"
+
+        caminho = pasta_envio / nome_arquivo
 
         await telegram_file.download_to_drive(caminho)
 
@@ -28,7 +33,7 @@ async def receber_arquivo(update: Update, context: ContextTypes.DEFAULT_TYPE):
             {
                 "tipo": "pdf",
                 "file_id": arquivo.file_id,
-                "nome": arquivo.file_name,
+                "nome": nome_arquivo,
                 "caminho": str(caminho),
             }
         )
@@ -36,10 +41,26 @@ async def receber_arquivo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif update.message.photo:
         foto = update.message.photo[-1]
 
+        telegram_file = await foto.get_file()
+
+        quantidade_imagens = sum(
+            1
+            for arquivo_salvo in context.user_data["arquivos"]
+            if arquivo_salvo["tipo"] == "imagem"
+        )
+
+        nome_arquivo = f"pagina_{quantidade_imagens + 1}.jpg"
+
+        caminho = pasta_envio / nome_arquivo
+
+        await telegram_file.download_to_drive(caminho)
+
         context.user_data["arquivos"].append(
             {
                 "tipo": "imagem",
                 "file_id": foto.file_id,
+                "nome": nome_arquivo,
+                "caminho": str(caminho),
             }
         )
 

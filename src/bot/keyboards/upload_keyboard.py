@@ -7,7 +7,7 @@ def teclado_instrucoes():
         [
             [
                 InlineKeyboardButton(
-                    "✅ Entendi",
+                    "➡️ Continuar",
                     callback_data="upload",
                 )
             ],

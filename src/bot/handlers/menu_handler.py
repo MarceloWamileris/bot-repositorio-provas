@@ -6,7 +6,12 @@ from bot.handlers.callbacks.menu_callbacks import (
     callback_consultar,
     callback_ajuda,
 )
+
 from bot.handlers.upload_handler import upload
+
+from bot.handlers.callbacks.finish_callbacks import (
+    callback_finalizar,
+)
 
 
 async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -28,3 +33,6 @@ async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     elif opcao == "upload":
         await upload(update, context)
+
+    elif opcao == "finalizar_envio":
+        await callback_finalizar(update, context)

@@ -1,6 +1,12 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 
+from data.modelo_avaliacao import nova_avaliacao
+
+from bot.handlers.cadastro_avaliacao.iniciar_cadastro import (
+    iniciar_cadastro,
+)
+
 from services.ocr_service import OCRService
 
 
@@ -42,3 +48,10 @@ class ProcessingService:
             print()
 
         print("==================================\n")
+
+        context.user_data["avaliacao"] = nova_avaliacao()
+
+        await iniciar_cadastro(
+            update,
+            context,
+        )

@@ -1,5 +1,5 @@
-MENSAGEM_UPLOAD = """
-📤 Envie agora os arquivos da avaliação.
-
-Após enviar todos os arquivos da avaliação, clique em "✅ Finalizar envio".
-"""
+MENSAGEM_UPLOAD = (
+    "📤 Envie agora os arquivos da avaliação.\n\n"
+    "Arquivos recebidos: {total}\n\n"
+    'Quando terminar, clique em "✅ Finalizar envio".'
+)

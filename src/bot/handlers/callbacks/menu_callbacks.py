@@ -11,6 +11,10 @@ async def callback_enviar(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await query.answer()
 
+    # Limpa qualquer envio anterior
+    context.user_data["arquivos"] = []
+    context.user_data.pop("contador_msg_id", None)
+
     await query.edit_message_text(
         text=MENSAGEM_INSTRUCOES,
         reply_markup=teclado_instrucoes(),

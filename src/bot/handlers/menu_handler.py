@@ -1,14 +1,30 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 
+from bot.handlers.callbacks.menu_callbacks import (
+    callback_enviar,
+    callback_consultar,
+    callback_ajuda,
+)
+from bot.handlers.upload_handler import upload
+
 
 async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
     query = update.callback_query
 
     await query.answer()
 
     opcao = query.data
 
-    await query.edit_message_text(
-        f"Você escolheu: {opcao}"
-    )
+    if opcao == "enviar":
+        await callback_enviar(update, context)
+
+    elif opcao == "consultar":
+        await callback_consultar(update, context)
+
+    elif opcao == "ajuda":
+        await callback_ajuda(update, context)
+
+    elif opcao == "upload":
+        await upload(update, context)

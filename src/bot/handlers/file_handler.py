@@ -3,6 +3,7 @@ from telegram.ext import ContextTypes
 
 from messages.upload import MENSAGEM_UPLOAD
 from bot.keyboards.finish_keyboard import teclado_finalizar
+from services.file_service import FileService
 
 
 async def receber_arquivo(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -13,11 +14,22 @@ async def receber_arquivo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.message.document:
         arquivo = update.message.document
 
+        pasta_usuario = FileService.criar_pasta_usuario(
+            update.effective_user.id
+        )
+
+        telegram_file = await arquivo.get_file()
+
+        caminho = pasta_usuario / arquivo.file_name
+
+        await telegram_file.download_to_drive(caminho)
+
         context.user_data["arquivos"].append(
             {
                 "tipo": "pdf",
                 "file_id": arquivo.file_id,
                 "nome": arquivo.file_name,
+                "caminho": str(caminho),
             }
         )
 

@@ -1,7 +1,12 @@
-from telegram.ext import ApplicationBuilder, CommandHandler
+from telegram.ext import (
+    ApplicationBuilder,
+    CommandHandler,
+    CallbackQueryHandler,
+)
 
 from config.settings import settings
 from bot.handlers.start_handler import start
+from bot.handlers.menu_handler import menu
 
 
 class TelegramBot:
@@ -16,6 +21,10 @@ class TelegramBot:
             CommandHandler("start", start)
         )
 
-        print("Handler /start registrado!")
+        application.add_handler(
+            CallbackQueryHandler(menu)
+        )
+
+        print("Bot conectado ao Telegram!")
 
         application.run_polling()

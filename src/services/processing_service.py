@@ -1,6 +1,8 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 
+from services.ocr_service import OCRService
+
 
 class ProcessingService:
 
@@ -28,11 +30,21 @@ class ProcessingService:
             if arquivo["tipo"] == "pdf":
 
                 print("→ PDF identificado.")
-                print("→ Enviando PDF para OCR...\n")
+
+                await OCRService.ler_pdf(
+                    arquivo["caminho"],
+                )
+
+                print()
 
             elif arquivo["tipo"] == "imagem":
 
                 print("→ Imagem identificada.")
-                print("→ Enviando imagem para OCR...\n")
+
+                await OCRService.ler_imagem(
+                    arquivo["caminho"],
+                )
+
+                print()
 
         print("==================================\n")

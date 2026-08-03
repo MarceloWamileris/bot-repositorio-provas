@@ -17,39 +17,47 @@ class StorageService:
             avaliacao,
         )
 
-        diretorio = FileService.criar_diretorio_provas(
+        diretorio_turno = FileService.criar_diretorio_provas(
             caminho,
         )
 
-        return diretorio
+        nome_avaliacao = (
+            NameService.gerar_nome_avaliacao(
+                avaliacao,
+            )
+        )
+
+        diretorio_avaliacao = (
+            diretorio_turno
+            / nome_avaliacao
+        )
+
+        diretorio_avaliacao.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+        return diretorio_avaliacao
 
     @classmethod
     def gerar_destino_disponivel(
         cls,
         diretorio: Path,
-        nome_arquivo: str,
+        extensao: str,
     ) -> Path:
 
-        destino = diretorio / nome_arquivo
-
-        if not destino.exists():
-
-            return destino
-
-        nome = destino.stem
-        extensao = destino.suffix
-
-        contador = 2
+        contador = 1
 
         while True:
 
-            novo_destino = (
-                diretorio / f"{nome} ({contador}){extensao}"
+            destino = (
+                diretorio
+                / f"{contador:02d}{extensao}"
             )
 
-            if not novo_destino.exists():
+            if not destino.exists():
 
-                return novo_destino
+                return destino
 
             contador += 1
 
@@ -64,14 +72,9 @@ class StorageService:
             avaliacao,
         )
 
-        nome_arquivo = NameService.gerar_nome(
-            avaliacao,
-            arquivo_original,
-        )
-
         destino = cls.gerar_destino_disponivel(
             diretorio,
-            nome_arquivo,
+            arquivo_original.suffix.lower(),
         )
 
         FileService.mover_arquivo(

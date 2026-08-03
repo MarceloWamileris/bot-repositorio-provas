@@ -1,16 +1,10 @@
-from pathlib import Path
-
-
 class NameService:
 
     @classmethod
-    def gerar_nome(
+    def gerar_nome_avaliacao(
         cls,
         avaliacao: dict,
-        arquivo_original: Path,
     ) -> str:
-
-        extensao = arquivo_original.suffix.lower()
 
         tipo = avaliacao["avaliacao"]
 
@@ -18,6 +12,6 @@ class NameService:
 
             vinculada = avaliacao["avaliacao_vinculada"]
 
-            return f"AVS ({vinculada}){extensao}"
+            return f"AVS ({vinculada})"
 
-        return f"{tipo}{extensao}"
+        return tipo

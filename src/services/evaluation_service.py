@@ -1,6 +1,7 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 
+from services.duplicate_service import DuplicateService
 from services.storage_service import StorageService
 
 
@@ -19,6 +20,16 @@ class EvaluationService:
             "arquivos",
             [],
         )
+
+        if DuplicateService.existe(
+            avaliacao,
+        ):
+
+            print(
+                "Avaliação já existe no acervo."
+            )
+
+            return
 
         for arquivo in arquivos:
 

@@ -1,8 +1,15 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from services.duplicate_service import DuplicateService
-from services.storage_service import StorageService
+from services.duplicate_service import (
+    DuplicateService,
+)
+from services.storage_service import (
+    StorageService,
+)
+from services.review_service import (
+    ReviewService,
+)
 
 
 class EvaluationService:
@@ -25,11 +32,13 @@ class EvaluationService:
             avaliacao,
         ):
 
-            print(
-                "Avaliação já existe no acervo."
+            await ReviewService.iniciar(
+                update,
+                context,
+                avaliacao,
             )
 
-            return
+            return "duplicado"
 
         for arquivo in arquivos:
 
@@ -41,3 +50,5 @@ class EvaluationService:
             print(
                 f"Arquivo armazenado em: {destino}"
             )
+
+        return "armazenado"

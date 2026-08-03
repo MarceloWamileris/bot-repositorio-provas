@@ -55,6 +55,10 @@ async def callback_teacher(
 
     print("\n==============================\n")
 
-    await query.edit_message_text(
+    mensagem = await query.edit_message_text(
         text=MENSAGEM_ANO,
+    )
+
+    context.user_data["mensagem_ano_id"] = (
+        mensagem.message_id
     )

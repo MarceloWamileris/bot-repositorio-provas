@@ -1,5 +1,6 @@
 MENSAGEM_UPLOAD = (
-    "📤 Envie agora os arquivos da avaliação.\n\n"
-    f"📄 Arquivos recebidos: {{total}}\n\n"
-    'Quando terminar, clique em "✅ Finalizar envio".'
+    "📤 Envie os arquivos da avaliação.\n\n"
+    "📄 Arquivos enviados: {total}\n\n"
+    "Você pode continuar enviando arquivos ou clicar em "
+    '"✅ Finalizar envio" quando terminar.'
 )

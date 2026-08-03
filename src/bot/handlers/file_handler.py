@@ -2,7 +2,9 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from messages.upload import MENSAGEM_UPLOAD
-from bot.keyboards.finish_keyboard import teclado_finalizar
+from bot.keyboards.finish_keyboard import (
+    teclado_finalizar,
+)
 
 
 async def receber_arquivo(
@@ -11,6 +13,7 @@ async def receber_arquivo(
 ):
 
     if "arquivos" not in context.user_data:
+
         context.user_data["arquivos"] = []
 
     pasta_envio = context.user_data["pasta_envio"]
@@ -27,11 +30,15 @@ async def receber_arquivo(
             if arquivo_salvo["tipo"] == "pdf"
         )
 
-        nome_arquivo = f"pdf_{quantidade_pdfs + 1}.pdf"
+        nome_arquivo = (
+            f"pdf_{quantidade_pdfs + 1}.pdf"
+        )
 
         caminho = pasta_envio / nome_arquivo
 
-        await telegram_file.download_to_drive(caminho)
+        await telegram_file.download_to_drive(
+            caminho
+        )
 
         context.user_data["arquivos"].append(
             {
@@ -54,11 +61,15 @@ async def receber_arquivo(
             if arquivo_salvo["tipo"] == "imagem"
         )
 
-        nome_arquivo = f"pagina_{quantidade_imagens + 1}.jpg"
+        nome_arquivo = (
+            f"pagina_{quantidade_imagens + 1}.jpg"
+        )
 
         caminho = pasta_envio / nome_arquivo
 
-        await telegram_file.download_to_drive(caminho)
+        await telegram_file.download_to_drive(
+            caminho
+        )
 
         context.user_data["arquivos"].append(
             {
@@ -69,15 +80,35 @@ async def receber_arquivo(
             }
         )
 
-    quantidade = len(context.user_data["arquivos"])
+    quantidade = len(
+        context.user_data["arquivos"]
+    )
 
-    message_id = context.user_data.get("contador_msg_id")
+    message_id = context.user_data.get(
+        "mensagem_upload_id"
+    )
 
     if message_id:
 
-        await context.bot.edit_message_text(
-            chat_id=update.effective_chat.id,
-            message_id=message_id,
-            text=MENSAGEM_UPLOAD.format(total=quantidade),
-            reply_markup=teclado_finalizar(),
-        )
+        try:
+
+            await context.bot.delete_message(
+                chat_id=update.effective_chat.id,
+                message_id=message_id,
+            )
+
+        except Exception:
+
+            pass
+
+    mensagem = await context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=MENSAGEM_UPLOAD.format(
+            total=quantidade,
+        ),
+        reply_markup=teclado_finalizar(),
+    )
+
+    context.user_data["mensagem_upload_id"] = (
+        mensagem.message_id
+    )

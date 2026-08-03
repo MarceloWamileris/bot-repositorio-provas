@@ -33,12 +33,8 @@ async def callback_finalizar(
 
         return
 
-    await query.edit_message_text(
-        "✅ Envio concluído!\n\n"
-        f"📄 Arquivos enviados: {len(arquivos)}\n\n"
-        "🔄 Aguarde enquanto analisamos sua avaliação.\n"
-        "Isso pode levar alguns instantes."
-    )
+    # Remove a mensagem do botão "Finalizar envio"
+    await query.delete_message()
 
     await ProcessingService.iniciar_processamento(
         update,

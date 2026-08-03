@@ -9,7 +9,9 @@ from bot.keyboards.linked_evaluation_keyboard import (
     linked_evaluation_keyboard,
 )
 
-from services.evaluation_service import EvaluationService
+from services.evaluation_service import (
+    EvaluationService,
+)
 
 
 async def callback_evaluation(
@@ -25,7 +27,9 @@ async def callback_evaluation(
         "avaliacao:"
     )
 
-    context.user_data["avaliacao"]["avaliacao"] = avaliacao
+    context.user_data["avaliacao"][
+        "avaliacao"
+    ] = avaliacao
 
     print("\n========== CADASTRO ==========\n")
 
@@ -35,7 +39,9 @@ async def callback_evaluation(
 
     if avaliacao == "AVS":
 
-        context.user_data["etapa"] = "linked_evaluation"
+        context.user_data["etapa"] = (
+            "linked_evaluation"
+        )
 
         await query.edit_message_text(
             text=MENSAGEM_AVALIACAO_VINCULADA,
@@ -46,11 +52,23 @@ async def callback_evaluation(
 
     context.user_data["etapa"] = "finish"
 
-    await EvaluationService.finalizar(
+    resultado = await EvaluationService.finalizar(
         update,
         context,
     )
 
-    await query.edit_message_text(
-        text="✅ Cadastro concluído!"
-    )
+    if resultado == "duplicado":
+
+        await query.delete_message()
+
+        return
+
+    if resultado == "armazenado":
+
+        await query.edit_message_text(
+            text=(
+                "✅ Sua prova foi adicionada ao acervo com sucesso.\n\n"
+                "Obrigado pela sua contribuição! Ela agora faz parte "
+                "do repositório de provas da FAETERJ ADS."
+            )
+        )

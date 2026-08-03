@@ -43,6 +43,23 @@ async def receber_ano(
 
     context.user_data["etapa"] = "semester"
 
+    message_id = context.user_data.get(
+        "mensagem_ano_id"
+    )
+
+    if message_id:
+
+        try:
+
+            await context.bot.delete_message(
+                chat_id=update.effective_chat.id,
+                message_id=message_id,
+            )
+
+        except Exception:
+
+            pass
+
     print("\n========== CADASTRO ==========\n")
 
     print(f"Ano: {ano}")

@@ -5,7 +5,10 @@ from messages.upload import MENSAGEM_UPLOAD
 from bot.keyboards.finish_keyboard import teclado_finalizar
 
 
-async def receber_arquivo(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def receber_arquivo(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+):
 
     if "arquivos" not in context.user_data:
         context.user_data["arquivos"] = []
@@ -13,6 +16,7 @@ async def receber_arquivo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     pasta_envio = context.user_data["pasta_envio"]
 
     if update.message.document:
+
         arquivo = update.message.document
 
         telegram_file = await arquivo.get_file()
@@ -34,11 +38,12 @@ async def receber_arquivo(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 "tipo": "pdf",
                 "file_id": arquivo.file_id,
                 "nome": nome_arquivo,
-                "caminho": str(caminho),
+                "caminho": caminho,
             }
         )
 
     elif update.message.photo:
+
         foto = update.message.photo[-1]
 
         telegram_file = await foto.get_file()
@@ -60,7 +65,7 @@ async def receber_arquivo(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 "tipo": "imagem",
                 "file_id": foto.file_id,
                 "nome": nome_arquivo,
-                "caminho": str(caminho),
+                "caminho": caminho,
             }
         )
 
@@ -69,6 +74,7 @@ async def receber_arquivo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message_id = context.user_data.get("contador_msg_id")
 
     if message_id:
+
         await context.bot.edit_message_text(
             chat_id=update.effective_chat.id,
             message_id=message_id,

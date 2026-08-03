@@ -1,6 +1,8 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 
+from services.evaluation_service import EvaluationService
+
 
 async def callback_linked_evaluation(
     update: Update,
@@ -28,6 +30,11 @@ async def callback_linked_evaluation(
     )
 
     print("\n==============================\n")
+
+    await EvaluationService.finalizar(
+        update,
+        context,
+    )
 
     await query.edit_message_text(
         text="✅ Cadastro concluído!"

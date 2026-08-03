@@ -9,6 +9,8 @@ from bot.keyboards.linked_evaluation_keyboard import (
     linked_evaluation_keyboard,
 )
 
+from services.evaluation_service import EvaluationService
+
 
 async def callback_evaluation(
     update: Update,
@@ -43,6 +45,11 @@ async def callback_evaluation(
         return
 
     context.user_data["etapa"] = "finish"
+
+    await EvaluationService.finalizar(
+        update,
+        context,
+    )
 
     await query.edit_message_text(
         text="✅ Cadastro concluído!"

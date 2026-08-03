@@ -21,6 +21,15 @@ class ReviewQueueService:
 
         print("\n========== FILA DE REVISÃO ==========\n")
 
-        print(REVIEW_QUEUE)
+        print(
+            f"Revisões pendentes: {len(REVIEW_QUEUE)}"
+        )
 
         print("\n=====================================\n")
+
+    @classmethod
+    def listar(
+        cls,
+    ):
+
+        return REVIEW_QUEUE

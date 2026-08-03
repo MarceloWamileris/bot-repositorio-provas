@@ -7,6 +7,9 @@ from telegram.ext import (
 )
 
 from bot.handlers.start_handler import start
+from bot.handlers.review_list_handler import (
+    listar_revisoes,
+)
 from bot.handlers.file_handler import receber_arquivo
 from bot.handlers.upload_handler import upload
 from bot.handlers.year_handler import receber_ano
@@ -61,6 +64,13 @@ def register_commands(application: Application):
         CommandHandler(
             "start",
             start,
+        )
+    )
+
+    application.add_handler(
+        CommandHandler(
+            "revisoes",
+            listar_revisoes,
         )
     )
 

@@ -63,12 +63,12 @@ async def callback_evaluation(
 
         return
 
-    if resultado == "armazenado":
+    if resultado == "fila":
 
         await query.edit_message_text(
             text=(
-                "✅ Sua prova foi adicionada ao acervo com sucesso.\n\n"
-                "Obrigado pela sua contribuição! Ela agora faz parte "
-                "do repositório de provas da FAETERJ ADS."
+                "✅ Sua prova foi enviada para análise.\n\n"
+                "Após a aprovação do administrador, ela será adicionada "
+                "ao acervo e publicada nos canais oficiais do projeto."
             )
         )

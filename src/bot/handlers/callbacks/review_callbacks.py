@@ -4,6 +4,9 @@ from telegram.ext import ContextTypes
 from services.review_queue_service import (
     ReviewQueueService,
 )
+from services.session_service import (
+    SessionService,
+)
 
 
 async def callback_review_request(
@@ -19,6 +22,10 @@ async def callback_review_request(
         usuario_id=update.effective_user.id,
         avaliacao=context.user_data["avaliacao"],
         arquivos=context.user_data["arquivos"],
+    )
+
+    SessionService.finalizar(
+        context,
     )
 
     await query.edit_message_text(
@@ -39,6 +46,10 @@ async def callback_review_cancel(
     query = update.callback_query
 
     await query.answer()
+
+    SessionService.finalizar(
+        context,
+    )
 
     await query.edit_message_text(
         text=(

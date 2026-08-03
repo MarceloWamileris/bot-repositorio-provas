@@ -2,8 +2,12 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from messages.upload import MENSAGEM_UPLOAD
-from bot.keyboards.finish_keyboard import teclado_finalizar
-from services.file_service import FileService
+from bot.keyboards.finish_keyboard import (
+    teclado_finalizar,
+)
+from services.file_service import (
+    FileService,
+)
 
 
 async def upload(
@@ -12,6 +16,8 @@ async def upload(
 ):
 
     query = update.callback_query
+
+    context.user_data["etapa"] = "upload"
 
     context.user_data["arquivos"] = []
 
@@ -22,7 +28,9 @@ async def upload(
     )
 
     mensagem = await query.edit_message_text(
-        text=MENSAGEM_UPLOAD.format(total=0),
+        text=MENSAGEM_UPLOAD.format(
+            total=0,
+        ),
         reply_markup=teclado_finalizar(),
     )
 

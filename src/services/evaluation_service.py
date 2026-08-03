@@ -4,11 +4,14 @@ from telegram.ext import ContextTypes
 from services.duplicate_service import (
     DuplicateService,
 )
-from services.storage_service import (
-    StorageService,
+from services.review_queue_service import (
+    ReviewQueueService,
 )
 from services.review_service import (
     ReviewService,
+)
+from services.session_service import (
+    SessionService,
 )
 
 
@@ -40,15 +43,14 @@ class EvaluationService:
 
             return "duplicado"
 
-        for arquivo in arquivos:
+        ReviewQueueService.adicionar(
+            usuario_id=update.effective_user.id,
+            avaliacao=avaliacao,
+            arquivos=arquivos,
+        )
 
-            destino = StorageService.armazenar_arquivo(
-                avaliacao,
-                arquivo["caminho"],
-            )
+        SessionService.finalizar(
+            context,
+        )
 
-            print(
-                f"Arquivo armazenado em: {destino}"
-            )
-
-        return "armazenado"
+        return "fila"

@@ -2,6 +2,7 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from messages.upload import MENSAGEM_UPLOAD
+
 from bot.keyboards.finish_keyboard import (
     teclado_finalizar,
 )
@@ -11,6 +12,18 @@ async def receber_arquivo(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
 ):
+
+    if context.user_data.get("etapa") != "upload":
+
+        await update.message.reply_text(
+            text=(
+                "📄 Não há nenhum envio em andamento.\n\n"
+                "Para iniciar uma nova avaliação, utilize o comando:\n\n"
+                "/start"
+            ),
+        )
+
+        return
 
     if "arquivos" not in context.user_data:
 

@@ -65,6 +65,8 @@ from bot.handlers.callbacks.submission_admin_callbacks import (
     callback_submission_files,
     callback_submission_approve,
     callback_submission_reject,
+    callback_submission_next,
+    callback_submission_previous,
 )
 
 from bot.handlers.callbacks.review_callbacks import (
@@ -232,6 +234,20 @@ def register_callbacks(application: Application):
         )
     )
 
+    application.add_handler(
+    CallbackQueryHandler(
+            callback_submission_next,
+            pattern=r"^submission:next:\d+:\d+$",
+        )
+    )
+
+    application.add_handler(
+    CallbackQueryHandler(
+            callback_submission_previous,
+            pattern=r"^submission:previous:\d+:\d+$",
+        )
+    )
+
 
 def register_messages(application: Application):
 
@@ -257,3 +273,6 @@ def register_handlers(application: Application):
     register_callbacks(application)
 
     register_messages(application)
+
+
+

@@ -44,15 +44,11 @@ class ReviewQueueService:
         print("\n=====================================\n")
 
     @classmethod
-    def listar(
-        cls,
-    ):
+    def listar(cls):
 
         grupos = {}
 
-        for indice, revisao in enumerate(
-            REVIEW_QUEUE,
-        ):
+        for indice, revisao in enumerate(REVIEW_QUEUE):
 
             avaliacao = revisao["avaliacao"]
 
@@ -65,26 +61,24 @@ class ReviewQueueService:
                 avaliacao["avaliacao"],
             )
 
+            submissao = revisao.copy()
+            submissao["review_queue_index"] = indice
+
             if chave not in grupos:
 
                 grupos[chave] = {
                     "indice": indice,
                     "avaliacao": avaliacao,
                     "quantidade": 1,
-                    "submissoes": [revisao],
+                    "submissoes": [submissao],
                 }
 
             else:
 
                 grupos[chave]["quantidade"] += 1
+                grupos[chave]["submissoes"].append(submissao)
 
-                grupos[chave]["submissoes"].append(
-                    revisao
-                )
-
-        return list(
-            grupos.values()
-        )
+        return list(grupos.values())
 
     @classmethod
     def obter(
@@ -117,28 +111,26 @@ class ReviewQueueService:
         )
 
         if grupo is None:
-
             return False
 
-        submissao = grupo["submissoes"][
-            submission_index
-        ]
+        submissao = grupo["submissoes"][submission_index]
 
-        REVIEW_QUEUE.remove(
-            submissao
+        REVIEW_QUEUE.pop(
+            submissao["review_queue_index"]
         )
 
         ReviewQueueStorageService.salvar()
 
         return True
-    
+
     @classmethod
     def remover_revisao(
         cls,
         review_index: int,
     ):
+
         grupos = cls.listar()
-        
+
         grupo = next(
             (
                 revisao
@@ -147,12 +139,20 @@ class ReviewQueueService:
             ),
             None,
         )
-        
+
         if grupo is None:
             return False
 
-        for submissao in grupo["submissoes"]:
-            REVIEW_QUEUE.remove(submissao)
+        indices = sorted(
+            (
+                submissao["review_queue_index"]
+                for submissao in grupo["submissoes"]
+            ),
+            reverse=True,
+        )
+
+        for indice in indices:
+            REVIEW_QUEUE.pop(indice)
 
         ReviewQueueStorageService.salvar()
 

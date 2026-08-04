@@ -1,0 +1,25 @@
+[
+    {
+        "usuario_id": 1706196502,
+        "avaliacao": {
+            "periodo": "Segundo Período",
+            "codigo_disciplina": "2REQ",
+            "nome_disciplina": "Engenharia de Requisitos",
+            "id_professor": 11,
+            "nome_professor": "Paulo Ricardo Galhanone",
+            "ano": 2026,
+            "semestre": 1,
+            "turno": "Manhã",
+            "avaliacao": "AVS",
+            "avaliacao_vinculada": "AV1"
+        },
+        "arquivos": [
+            {
+                "tipo": "imagem",
+                "file_id": "AgACAgEAAxkBAAID8mpxPfh3mwX4i-jLLegraoNsQUEfAAIHDWsb1kSJRwd8PbBdg3F4AQADAgADeQADPQQ",
+                "nome": "pagina_1.jpg",
+                "caminho": "D:\\RepositorioProvas\\Temp\\1706196502\\3d07112b-741c-416f-befa-9419d3daae32\\pagina_1.jpg"
+            }
+        ]
+    }
+]

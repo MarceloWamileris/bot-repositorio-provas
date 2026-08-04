@@ -52,6 +52,14 @@ from bot.handlers.callbacks.linked_evaluation_callbacks import (
     callback_linked_evaluation,
 )
 
+from bot.handlers.callbacks.review_admin_callbacks import (
+    callback_review_details,
+)
+
+from bot.handlers.callbacks.submission_admin_callbacks import (
+    callback_submission_details,
+)
+
 from bot.handlers.callbacks.review_callbacks import (
     callback_review_request,
     callback_review_cancel,
@@ -158,6 +166,20 @@ def register_callbacks(application: Application):
         CallbackQueryHandler(
             callback_linked_evaluation,
             pattern="^vinculada:",
+        )
+    )
+
+    application.add_handler(
+        CallbackQueryHandler(
+            callback_review_details,
+            pattern=r"^review:\d+$",
+        )
+    )
+
+    application.add_handler(
+        CallbackQueryHandler(
+            callback_submission_details,
+            pattern=r"^submission:\d+:\d+$",
         )
     )
 

@@ -8,24 +8,26 @@ def review_list_keyboard(
 
     teclado = []
 
-    for indice, revisao in enumerate(
-        revisoes,
-    ):
+    for revisao in revisoes:
 
         avaliacao = revisao["avaliacao"]
 
+        quantidade = revisao["quantidade"]
+
         texto = (
             f"{avaliacao['codigo_disciplina']} • "
-            f"{avaliacao['nome_professor']} • "
-            f"{avaliacao['avaliacao']} • "
-            f"{avaliacao['ano']}-{avaliacao['semestre']}"
+            f"{avaliacao['avaliacao']}"
         )
+
+        if quantidade > 1:
+
+            texto += f" ({quantidade})"
 
         teclado.append(
             [
                 InlineKeyboardButton(
                     text=texto,
-                    callback_data=f"review:{indice}",
+                    callback_data=f"review:{revisao['indice']}",
                 )
             ]
         )
@@ -33,3 +35,4 @@ def review_list_keyboard(
     return InlineKeyboardMarkup(
         teclado
     )
+    

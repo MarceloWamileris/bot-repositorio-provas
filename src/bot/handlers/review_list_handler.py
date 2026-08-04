@@ -10,8 +10,8 @@ from bot.keyboards.review_list_keyboard import (
 )
 
 
-async def listar_revisoes(
-    update: Update,
+async def enviar_lista_revisoes(
+    chat_id: int,
     context: ContextTypes.DEFAULT_TYPE,
 ):
 
@@ -19,13 +19,15 @@ async def listar_revisoes(
 
     if len(revisoes) == 0:
 
-        await update.message.reply_text(
-            "📭 Não há revisões pendentes."
+        await context.bot.send_message(
+            chat_id=chat_id,
+            text="📭 Não há revisões pendentes.",
         )
 
         return
 
-    await update.message.reply_text(
+    await context.bot.send_message(
+        chat_id=chat_id,
         text=(
             "📋 Revisões pendentes\n\n"
             "⬇️ Selecione uma revisão:"
@@ -33,4 +35,15 @@ async def listar_revisoes(
         reply_markup=review_list_keyboard(
             revisoes,
         ),
+    )
+
+
+async def listar_revisoes(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+):
+
+    await enviar_lista_revisoes(
+        update.effective_chat.id,
+        context,
     )

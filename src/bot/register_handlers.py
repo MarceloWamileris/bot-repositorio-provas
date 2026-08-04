@@ -56,8 +56,15 @@ from bot.handlers.callbacks.review_admin_callbacks import (
     callback_review_details,
 )
 
+from bot.handlers.callbacks.review_list_callbacks import (
+    callback_review_list,
+)
+
 from bot.handlers.callbacks.submission_admin_callbacks import (
     callback_submission_details,
+    callback_submission_files,
+    callback_submission_approve,
+    callback_submission_reject,
 )
 
 from bot.handlers.callbacks.review_callbacks import (
@@ -178,8 +185,36 @@ def register_callbacks(application: Application):
 
     application.add_handler(
         CallbackQueryHandler(
+            callback_review_list,
+            pattern=r"^review:list$",
+        )
+    )
+
+    application.add_handler(
+        CallbackQueryHandler(
             callback_submission_details,
             pattern=r"^submission:\d+:\d+$",
+        )
+    )
+
+    application.add_handler(
+        CallbackQueryHandler(
+            callback_submission_files,
+            pattern=r"^submission:files:\d+:\d+$",
+        )
+    )
+
+    application.add_handler(
+        CallbackQueryHandler(
+            callback_submission_approve,
+            pattern=r"^submission:approve:\d+:\d+$",
+        )
+    )
+
+    application.add_handler(
+        CallbackQueryHandler(
+            callback_submission_reject,
+            pattern=r"^submission:reject:\d+:\d+$",
         )
     )
 

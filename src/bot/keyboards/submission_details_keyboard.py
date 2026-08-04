@@ -4,6 +4,7 @@ from telegram import InlineKeyboardMarkup
 
 def submission_details_keyboard(
     review_index: int,
+    submission_index: int,
 ):
 
     teclado = InlineKeyboardMarkup(
@@ -12,31 +13,9 @@ def submission_details_keyboard(
                 InlineKeyboardButton(
                     "📂 Ver arquivos",
                     callback_data=(
-                        f"submission:files:{review_index}"
-                    ),
-                )
-            ],
-            [
-                InlineKeyboardButton(
-                    "⬅️ Voltar",
-                    callback_data=(
-                        f"review:{review_index}"
-                    ),
-                )
-            ],
-            [
-                InlineKeyboardButton(
-                    "✅ Aprovar esta versão",
-                    callback_data=(
-                        f"submission:approve:{review_index}"
-                    ),
-                )
-            ],
-            [
-                InlineKeyboardButton(
-                    "❌ Rejeitar esta versão",
-                    callback_data=(
-                        f"submission:reject:{review_index}"
+                        f"submission:files:"
+                        f"{review_index}:"
+                        f"{submission_index}"
                     ),
                 )
             ],

@@ -10,6 +10,51 @@ from bot.keyboards.review_details_keyboard import (
 )
 
 
+async def enviar_detalhes_revisao(
+    chat_id: int,
+    context: ContextTypes.DEFAULT_TYPE,
+    grupo: dict,
+    mensagem: str | None = None,
+    message_id: int | None = None,
+):
+
+    if message_id is not None:
+        try:
+            await context.bot.delete_message(
+                chat_id=chat_id,
+                message_id=message_id,
+            )
+        except Exception:
+            pass
+
+    avaliacao = grupo["avaliacao"]
+
+    texto = ""
+
+    if mensagem:
+        texto += mensagem + "\n\n"
+
+    texto += (
+        "📄 Revisão selecionada\n\n"
+        f"Disciplina: {avaliacao['codigo_disciplina']}\n"
+        f"Professor: {avaliacao['nome_professor']}\n"
+        f"Ano: {avaliacao['ano']}\n"
+        f"Semestre: {avaliacao['semestre']}\n"
+        f"Turno: {avaliacao['turno']}\n"
+        f"Avaliação: {avaliacao['avaliacao']}\n\n"
+        f"Versões pendentes: {grupo['quantidade']}\n\n"
+        "⬇️ Selecione uma versão:"
+    )
+
+    await context.bot.send_message(
+        chat_id=chat_id,
+        text=texto,
+        reply_markup=review_details_keyboard(
+            grupo,
+        ),
+    )
+
+
 async def callback_review_details(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
@@ -46,21 +91,9 @@ async def callback_review_details(
 
         return
 
-    avaliacao = grupo["avaliacao"]
-
-    await query.edit_message_text(
-        text=(
-            "📄 Revisão selecionada\n\n"
-            f"Disciplina: {avaliacao['codigo_disciplina']}\n"
-            f"Professor: {avaliacao['nome_professor']}\n"
-            f"Ano: {avaliacao['ano']}\n"
-            f"Semestre: {avaliacao['semestre']}\n"
-            f"Turno: {avaliacao['turno']}\n"
-            f"Avaliação: {avaliacao['avaliacao']}\n\n"
-            f"Versões pendentes: {grupo['quantidade']}\n\n"
-            "⬇️ Selecione uma versão:"
-        ),
-        reply_markup=review_details_keyboard(
-            grupo,
-        ),
+    await enviar_detalhes_revisao(
+        chat_id=update.effective_chat.id,
+        context=context,
+        grupo=grupo,
+        message_id=query.message.message_id,
     )

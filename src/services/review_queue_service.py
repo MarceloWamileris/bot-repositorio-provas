@@ -85,3 +85,75 @@ class ReviewQueueService:
         return list(
             grupos.values()
         )
+
+    @classmethod
+    def obter(
+        cls,
+        indice: int,
+    ):
+
+        if indice < 0 or indice >= len(REVIEW_QUEUE):
+
+            return None
+
+        return REVIEW_QUEUE[indice]
+
+    @classmethod
+    def remover_submissao(
+        cls,
+        review_index: int,
+        submission_index: int,
+    ):
+
+        grupos = cls.listar()
+
+        grupo = next(
+            (
+                revisao
+                for revisao in grupos
+                if revisao["indice"] == review_index
+            ),
+            None,
+        )
+
+        if grupo is None:
+
+            return False
+
+        submissao = grupo["submissoes"][
+            submission_index
+        ]
+
+        REVIEW_QUEUE.remove(
+            submissao
+        )
+
+        ReviewQueueStorageService.salvar()
+
+        return True
+    
+    @classmethod
+    def remover_revisao(
+        cls,
+        review_index: int,
+    ):
+        grupos = cls.listar()
+        
+        grupo = next(
+            (
+                revisao
+                for revisao in grupos
+                if revisao["indice"] == review_index
+            ),
+            None,
+        )
+        
+        if grupo is None:
+            return False
+
+        for submissao in grupo["submissoes"]:
+            REVIEW_QUEUE.remove(submissao)
+
+        ReviewQueueStorageService.salvar()
+
+        return True

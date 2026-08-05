@@ -22,6 +22,13 @@ async def callback_review_request(
         usuario_id=update.effective_user.id,
         avaliacao=context.user_data["avaliacao"],
         arquivos=context.user_data["arquivos"],
+        tipo="comparacao",
+        acervo=context.user_data["prova_acervo"],
+    )
+
+    context.user_data.pop(
+        "prova_acervo",
+        None,
     )
 
     SessionService.finalizar(
@@ -46,6 +53,11 @@ async def callback_review_cancel(
     query = update.callback_query
 
     await query.answer()
+
+    context.user_data.pop(
+        "prova_acervo",
+        None,
+    )
 
     SessionService.finalizar(
         context,

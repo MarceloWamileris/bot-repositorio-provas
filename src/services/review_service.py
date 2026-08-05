@@ -4,9 +4,6 @@ from telegram.ext import ContextTypes
 from bot.keyboards.review_keyboard import (
     review_keyboard,
 )
-from services.proof_service import (
-    ProofService,
-)
 
 
 class ReviewService:
@@ -17,11 +14,19 @@ class ReviewService:
         update: Update,
         context: ContextTypes.DEFAULT_TYPE,
         avaliacao: dict,
+        prova_acervo: dict,
     ):
 
-        paginas = ProofService.obter_paginas(
-            avaliacao,
+        if prova_acervo is None:
+            return
+
+        # Salva a prova atual do acervo para ser utilizada
+        # caso o usuário solicite a revisão.
+        context.user_data["prova_acervo"] = (
+            prova_acervo
         )
+
+        paginas = prova_acervo["paginas"]
 
         for pagina in paginas:
 

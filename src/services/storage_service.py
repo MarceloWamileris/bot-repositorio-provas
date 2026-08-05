@@ -1,4 +1,5 @@
 from pathlib import Path
+import shutil
 
 from services.path_service import PathService
 from services.file_service import FileService
@@ -81,3 +82,46 @@ class StorageService:
         )
 
         return destino
+
+    @classmethod
+    def substituir_avaliacao(
+        cls,
+        avaliacao: dict,
+        arquivos: list[Path],
+    ):
+        """
+        Substitui completamente uma avaliação existente
+        pelos arquivos aprovados na comparação.
+        """
+
+        diretorio = cls.preparar_destino(
+            avaliacao,
+        )
+
+        if diretorio.exists():
+
+            shutil.rmtree(
+                diretorio,
+            )
+
+        diretorio.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+        for indice, arquivo in enumerate(
+            arquivos,
+            start=1,
+        ):
+
+            destino = (
+                diretorio
+                / f"{indice:02d}{arquivo.suffix.lower()}"
+            )
+
+            FileService.mover_arquivo(
+                arquivo,
+                destino,
+            )
+
+        return diretorio

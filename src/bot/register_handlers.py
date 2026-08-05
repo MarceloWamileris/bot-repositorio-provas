@@ -69,6 +69,13 @@ from bot.handlers.callbacks.submission_admin_callbacks import (
     callback_submission_previous,
 )
 
+from bot.handlers.callbacks.submission_compare_callbacks import (
+    callback_compare_next,
+    callback_compare_previous,
+    callback_compare_reject,
+    callback_compare_approve,
+)
+
 from bot.handlers.callbacks.review_callbacks import (
     callback_review_request,
     callback_review_cancel,
@@ -248,6 +255,33 @@ def register_callbacks(application: Application):
         )
     )
 
+    application.add_handler(
+    CallbackQueryHandler(
+        callback_compare_next,
+        pattern=r"^compare:next:\d+:\d+$",
+        )
+    )
+
+    application.add_handler(
+    CallbackQueryHandler(
+        callback_compare_previous,
+        pattern=r"^compare:previous:\d+:\d+$",
+        )
+    )
+
+    application.add_handler(
+    CallbackQueryHandler(
+        callback_compare_reject,
+        pattern=r"^compare:reject:\d+:\d+$",
+        )
+    )
+
+    application.add_handler(
+    CallbackQueryHandler(
+        callback_compare_approve,
+        pattern=r"^compare:approve:\d+:\d+$",
+        )
+    )
 
 def register_messages(application: Application):
 

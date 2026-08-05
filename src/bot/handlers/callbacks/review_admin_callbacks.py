@@ -34,17 +34,36 @@ async def enviar_detalhes_revisao(
     if mensagem:
         texto += mensagem + "\n\n"
 
-    texto += (
-        "📄 Revisão selecionada\n\n"
-        f"Disciplina: {avaliacao['codigo_disciplina']}\n"
-        f"Professor: {avaliacao['nome_professor']}\n"
-        f"Ano: {avaliacao['ano']}\n"
-        f"Semestre: {avaliacao['semestre']}\n"
-        f"Turno: {avaliacao['turno']}\n"
-        f"Avaliação: {avaliacao['avaliacao']}\n\n"
-        f"Versões pendentes: {grupo['quantidade']}\n\n"
-        "⬇️ Selecione uma versão:"
-    )
+    if grupo["tipo"] == "comparacao":
+
+        texto += (
+            "📚 Comparação de provas\n\n"
+            f"Disciplina: {avaliacao['codigo_disciplina']}\n"
+            f"Professor: {avaliacao['nome_professor']}\n"
+            f"Ano: {avaliacao['ano']}\n"
+            f"Semestre: {avaliacao['semestre']}\n"
+            f"Turno: {avaliacao['turno']}\n"
+            f"Avaliação: {avaliacao['avaliacao']}\n\n"
+            "⚠️ Já existe uma prova desta avaliação no acervo.\n\n"
+            "Selecione uma versão enviada pelo aluno para compará-la "
+            "com a prova atualmente armazenada.\n\n"
+            f"Versões enviadas: {grupo['quantidade']}\n\n"
+            "⬇️ Selecione uma versão:"
+        )
+
+    else:
+
+        texto += (
+            "📄 Revisão selecionada\n\n"
+            f"Disciplina: {avaliacao['codigo_disciplina']}\n"
+            f"Professor: {avaliacao['nome_professor']}\n"
+            f"Ano: {avaliacao['ano']}\n"
+            f"Semestre: {avaliacao['semestre']}\n"
+            f"Turno: {avaliacao['turno']}\n"
+            f"Avaliação: {avaliacao['avaliacao']}\n\n"
+            f"Versões pendentes: {grupo['quantidade']}\n\n"
+            "⬇️ Selecione uma versão:"
+        )
 
     await context.bot.send_message(
         chat_id=chat_id,

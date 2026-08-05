@@ -4,6 +4,9 @@ from telegram.ext import ContextTypes
 from services.duplicate_service import (
     DuplicateService,
 )
+from services.proof_service import (
+    ProofService,
+)
 from services.review_queue_service import (
     ReviewQueueService,
 )
@@ -35,10 +38,15 @@ class EvaluationService:
             avaliacao,
         ):
 
+            prova_acervo = ProofService.obter_prova(
+                avaliacao,
+            )
+
             await ReviewService.iniciar(
                 update,
                 context,
                 avaliacao,
+                prova_acervo,
             )
 
             return "duplicado"

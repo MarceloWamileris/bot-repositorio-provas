@@ -38,3 +38,29 @@ class ProofService:
         )
 
         return paginas
+
+    @classmethod
+    def obter_prova(
+        cls,
+        avaliacao: dict,
+    ):
+        """
+        Retorna todas as informações da prova atualmente
+        armazenada no acervo.
+
+        No momento retorna apenas as páginas, mas no futuro
+        poderá incluir outras informações (hash, pasta,
+        data de publicação, etc.).
+        """
+
+        paginas = cls.obter_paginas(
+            avaliacao,
+        )
+
+        if len(paginas) == 0:
+
+            return None
+
+        return {
+            "paginas": paginas,
+        }

@@ -15,13 +15,21 @@ class ReviewQueueService:
         usuario_id: int,
         avaliacao: dict,
         arquivos: list,
+        tipo: str = "nova",
+        acervo: dict | None = None,
     ):
 
         REVIEW_QUEUE.append(
             {
+                "tipo": tipo,
                 "usuario_id": usuario_id,
                 "avaliacao": avaliacao.copy(),
                 "arquivos": arquivos.copy(),
+                "acervo": (
+                    acervo.copy()
+                    if acervo is not None
+                    else None
+                ),
             }
         )
 
@@ -68,6 +76,13 @@ class ReviewQueueService:
 
                 grupos[chave] = {
                     "indice": indice,
+                    "tipo": revisao.get(
+                        "tipo",
+                        "nova",
+                    ),
+                    "acervo": revisao.get(
+                        "acervo",
+                    ),
                     "avaliacao": avaliacao,
                     "quantidade": 1,
                     "submissoes": [submissao],
@@ -76,7 +91,9 @@ class ReviewQueueService:
             else:
 
                 grupos[chave]["quantidade"] += 1
-                grupos[chave]["submissoes"].append(submissao)
+                grupos[chave]["submissoes"].append(
+                    submissao
+                )
 
         return list(grupos.values())
 
@@ -87,7 +104,6 @@ class ReviewQueueService:
     ):
 
         if indice < 0 or indice >= len(REVIEW_QUEUE):
-
             return None
 
         return REVIEW_QUEUE[indice]

@@ -37,6 +37,18 @@ class ReviewQueueStorageService:
                     arquivo["caminho"]
                 )
 
+            if revisao.get("acervo") is not None:
+
+                paginas = revisao["acervo"].get(
+                    "paginas",
+                    [],
+                )
+
+                revisao["acervo"]["paginas"] = [
+                    Path(pagina)
+                    for pagina in paginas
+                ]
+
         REVIEW_QUEUE.clear()
 
         REVIEW_QUEUE.extend(
@@ -53,10 +65,27 @@ class ReviewQueueStorageService:
         for revisao in REVIEW_QUEUE:
 
             revisao_json = {
+                "tipo": revisao.get(
+                    "tipo",
+                    "nova",
+                ),
                 "usuario_id": revisao["usuario_id"],
                 "avaliacao": revisao["avaliacao"].copy(),
                 "arquivos": [],
+                "acervo": None,
             }
+
+            if revisao.get("acervo") is not None:
+
+                revisao_json["acervo"] = {
+                    "paginas": [
+                        str(pagina)
+                        for pagina in revisao["acervo"].get(
+                            "paginas",
+                            [],
+                        )
+                    ]
+                }
 
             for arquivo in revisao["arquivos"]:
 

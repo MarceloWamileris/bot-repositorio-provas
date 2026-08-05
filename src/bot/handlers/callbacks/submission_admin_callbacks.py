@@ -272,12 +272,62 @@ async def callback_submission_files(
         query.data.split(":")
     )
 
-    await mostrar_submissao(
-        chat_id=update.effective_chat.id,
-        context=context,
-        review_index=int(review_index),
-        submission_index=int(submission_index),
+    review_index = int(review_index)
+    submission_index = int(submission_index)
+
+    grupo = buscar_grupo(review_index)
+
+    if grupo is None:
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=MSG_REVISAO_INDISPONIVEL,
+        )
+        return
+
+    submissao = buscar_submissao(
+        grupo,
+        submission_index,
     )
+
+    print("=" * 50)
+    print("GRUPO:")
+    print(grupo)
+    print("=" * 50)
+
+    if submissao is None:
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=MSG_VERSAO_INDISPONIVEL,
+        )
+        return
+
+    # DEBUG: Verificando estrutura do grupo
+    print("CHAVES DO GRUPO:")
+    print(grupo.keys())
+    print("TIPO:", grupo.get("tipo"))
+    print("=" * 80)
+    print("GRUPO COMPLETO:")
+    print(grupo)
+    print("=" * 80)
+
+    if grupo["tipo"] == "comparacao":
+        from bot.handlers.callbacks.submission_compare_callbacks import (
+            mostrar_comparacao,
+        )
+
+        await mostrar_comparacao(
+            chat_id=update.effective_chat.id,
+            context=context,
+            grupo=grupo,
+            submission_index=submission_index,
+        )
+    else:
+        await mostrar_submissao(
+            chat_id=update.effective_chat.id,
+            context=context,
+            review_index=review_index,
+            submission_index=submission_index,
+        )
 
 
 async def callback_submission_next(

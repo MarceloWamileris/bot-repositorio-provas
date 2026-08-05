@@ -1,3 +1,5 @@
+import traceback
+
 from telegram import Update
 from telegram.ext import ContextTypes
 
@@ -19,6 +21,9 @@ from bot.handlers.callbacks.review_admin_callbacks import (
 from bot.utils.review_messages import (
     add_review_message,
     clear_review_messages,
+)
+from services.storage_service import (
+    StorageService,
 )
 
 
@@ -384,8 +389,6 @@ async def callback_submission_approve(
     review_index = int(review_index)
     submission_index = int(submission_index)
 
-    # Valida ANTES de limpar mensagens, para manter a
-    # ordem consistente com next/previous.
     grupo = buscar_grupo(review_index)
 
     if grupo is None:
@@ -393,6 +396,35 @@ async def callback_submission_approve(
             chat_id=update.effective_chat.id,
             text=MSG_REVISAO_INDISPONIVEL,
         )
+        return
+
+    submissao = buscar_submissao(
+        grupo,
+        submission_index,
+    )
+
+    if submissao is None:
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=MSG_VERSAO_INDISPONIVEL,
+        )
+        return
+
+    try:
+        for arquivo in submissao["arquivos"]:
+            StorageService.armazenar_arquivo(
+                grupo["avaliacao"],
+                arquivo["caminho"],
+            )
+    except Exception as erro:
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=(
+                "❌ Ocorreu um erro ao salvar os arquivos.\n"
+                "A revisão não foi removida da fila."
+            ),
+        )
+        traceback.print_exc()
         return
 
     await clear_review_messages(

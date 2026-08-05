@@ -46,20 +46,18 @@ class StorageService:
         extensao: str,
     ) -> Path:
 
-        contador = 1
+        arquivos = [
+            arquivo
+            for arquivo in diretorio.iterdir()
+            if arquivo.is_file()
+        ]
 
-        while True:
+        contador = len(arquivos) + 1
 
-            destino = (
-                diretorio
-                / f"{contador:02d}{extensao}"
-            )
-
-            if not destino.exists():
-
-                return destino
-
-            contador += 1
+        return (
+            diretorio
+            / f"{contador:02d}{extensao}"
+        )
 
     @classmethod
     def armazenar_arquivo(

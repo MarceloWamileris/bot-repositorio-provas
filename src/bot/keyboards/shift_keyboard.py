@@ -13,8 +13,8 @@ def shift_keyboard():
     teclado = []
 
     emojis = {
-        "Manhã": "🌞",
-        "Tarde": "☀️",
+        "Manhã": "🌅",
+        "Tarde": "🌤️",
         "Noite": "🌙",
     }
 
@@ -29,4 +29,16 @@ def shift_keyboard():
             ]
         )
 
-    return InlineKeyboardMarkup(teclado)
+    # Botão de voltar
+    teclado.append(
+        [
+            InlineKeyboardButton(
+                text="⬅️ Voltar",
+                callback_data="voltar:semestre",
+            )
+        ]
+    )
+
+    return InlineKeyboardMarkup(
+        teclado,
+    )

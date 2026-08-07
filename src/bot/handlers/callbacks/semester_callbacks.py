@@ -1,7 +1,9 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from messages.select_shift import MENSAGEM_TURNO
+from messages.select_shift import (
+    MENSAGEM_TURNO,
+)
 
 from bot.keyboards.shift_keyboard import (
     shift_keyboard,
@@ -23,7 +25,9 @@ async def callback_semester(
         )
     )
 
-    context.user_data["avaliacao"]["semestre"] = semestre
+    context.user_data["avaliacao"]["semestre"] = (
+        semestre
+    )
 
     context.user_data["etapa"] = "shift"
 

@@ -32,4 +32,14 @@ def teclado_professores():
 
         teclado.append(linha)
 
+    # Botão de voltar
+    teclado.append(
+        [
+            InlineKeyboardButton(
+                text="⬅️ Voltar",
+                callback_data="voltar:disciplina",
+            )
+        ]
+    )
+
     return InlineKeyboardMarkup(teclado)

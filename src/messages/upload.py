@@ -1,6 +1,10 @@
 MENSAGEM_UPLOAD = (
-    "📤 Envie os arquivos da avaliação.\n\n"
+    "📄 Envie um arquivo por vez, respeitando a ordem da prova.\n\n"
+    "Arquivos aceitos:\n"
+    "🖼️ Imagem (JPEG/PNG)\n"
+    "📄 PDF\n"
+    "📄 DOCX\n\n"
     "📄 Arquivos enviados: {total}\n\n"
-    "Você pode continuar enviando arquivos ou clicar em "
-    '"✅ Finalizar envio" quando terminar.'
+    "Após enviar um arquivo, envie o próximo.\n\n"
+    '✅ Clique em "Finalizar envio" somente quando tiver enviado toda a prova.'
 )

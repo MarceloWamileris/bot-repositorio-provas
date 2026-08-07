@@ -26,6 +26,13 @@ from services.storage_service import (
     StorageService,
 )
 
+from services.file_service import (
+    FileService,
+)
+
+from services.file_service import (
+    FileService,
+)
 
 MSG_REVISAO_INDISPONIVEL = (
     "⚠️ Esta revisão não está mais disponível."
@@ -466,6 +473,17 @@ async def callback_submission_approve(
                 grupo["avaliacao"],
                 arquivo["caminho"],
             )
+
+        if submissao["arquivos"]:
+
+            pasta_envio = (
+            submissao["arquivos"][0]["caminho"].parent
+        )
+
+        FileService.remover_pasta_envio(
+            pasta_envio,
+        )
+
     except Exception as erro:
         await context.bot.send_message(
             chat_id=update.effective_chat.id,

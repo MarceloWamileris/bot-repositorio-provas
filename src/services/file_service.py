@@ -55,3 +55,15 @@ class FileService:
             str(origem),
             str(destino),
         )
+
+    @classmethod
+    def remover_pasta_envio(
+        cls,
+        pasta: Path,
+    ) -> None:
+
+        if pasta.exists():
+
+            shutil.rmtree(
+                pasta,
+            )

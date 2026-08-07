@@ -81,6 +81,20 @@ from bot.handlers.callbacks.review_callbacks import (
     callback_review_cancel,
 )
 
+from bot.handlers.callbacks.fac_callbacks import (
+    callback_fac,
+)
+
+from bot.handlers.callbacks.back_callbacks import (
+    callback_back_periodo,
+    callback_back_disciplina,
+    callback_back_teacher,
+    callback_back_semester,
+    callback_back_shift,
+    callback_back_evaluation,
+    callback_back_linked_evaluation,
+    callback_back_fac,
+)
 
 def register_commands(application: Application):
 
@@ -145,8 +159,36 @@ def register_callbacks(application: Application):
 
     application.add_handler(
         CallbackQueryHandler(
+            callback_back_periodo,
+            pattern="^voltar:periodo$",
+        )
+    )
+
+    application.add_handler(
+        CallbackQueryHandler(
             callback_disciplina,
             pattern="^disciplina:",
+        )
+    )
+
+    application.add_handler(
+        CallbackQueryHandler(
+            callback_back_disciplina,
+            pattern="^voltar:disciplina$",
+        )
+    )
+
+    application.add_handler(
+        CallbackQueryHandler(
+            callback_back_fac,
+            pattern="^voltar:fac$",
+        )
+    )
+
+    application.add_handler(
+        CallbackQueryHandler(
+            callback_fac,
+            pattern="^fac:",
         )
     )
 
@@ -166,8 +208,29 @@ def register_callbacks(application: Application):
 
     application.add_handler(
         CallbackQueryHandler(
+            callback_back_semester,
+            pattern="^voltar:ano$",
+        )
+    )
+
+    application.add_handler(
+        CallbackQueryHandler(
+            callback_back_teacher,
+            pattern="^voltar:professor$",
+        )
+    )
+
+    application.add_handler(
+        CallbackQueryHandler(
             callback_shift,
             pattern="^turno:",
+        )
+    )
+
+    application.add_handler(
+        CallbackQueryHandler(
+            callback_back_shift,
+            pattern="^voltar:semestre$",
         )
     )
 
@@ -180,8 +243,22 @@ def register_callbacks(application: Application):
 
     application.add_handler(
         CallbackQueryHandler(
+            callback_back_evaluation,
+            pattern="^voltar:turno$",
+        )
+    )
+
+    application.add_handler(
+        CallbackQueryHandler(
             callback_linked_evaluation,
             pattern="^vinculada:",
+        )
+    )
+
+    application.add_handler(
+        CallbackQueryHandler(
+            callback_back_linked_evaluation,
+            pattern="^voltar:avaliacao$",
         )
     )
 
@@ -282,6 +359,7 @@ def register_callbacks(application: Application):
         pattern=r"^compare:approve:\d+:\d+$",
         )
     )
+
 
 def register_messages(application: Application):
 

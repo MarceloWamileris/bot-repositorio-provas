@@ -9,6 +9,10 @@ from messages.select_year import (
     MENSAGEM_ANO,
 )
 
+from bot.keyboards.year_keyboard import (
+    teclado_ano,
+)
+
 
 async def callback_teacher(
     update: Update,
@@ -57,6 +61,7 @@ async def callback_teacher(
 
     mensagem = await query.edit_message_text(
         text=MENSAGEM_ANO,
+        reply_markup=teclado_ano(),
     )
 
     context.user_data["mensagem_ano_id"] = (

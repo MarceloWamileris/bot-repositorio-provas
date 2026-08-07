@@ -9,17 +9,33 @@ class Settings:
 
         load_dotenv()
 
-        self.BOT_TOKEN = os.getenv("BOT_TOKEN")
+        self.BOT_TOKEN = os.getenv(
+            "BOT_TOKEN"
+        )
 
-        self.BASE_STORAGE = Path("D:/RepositorioProvas")
+        self.ADMIN_ID = int(
+            os.getenv("ADMIN_ID")
+        )
 
-        self.TEMP_PATH = self.BASE_STORAGE / "Temp"
+        self.BASE_STORAGE = Path(
+            "D:/RepositorioProvas"
+        )
 
-        self.PROVAS_PATH = self.BASE_STORAGE / "Provas"
+        self.TEMP_PATH = (
+            self.BASE_STORAGE / "Temp"
+        )
 
-        self.BACKUP_PATH = self.BASE_STORAGE / "Backup"
+        self.PROVAS_PATH = (
+            self.BASE_STORAGE / "Provas"
+        )
 
-        self.LOG_PATH = self.BASE_STORAGE / "Logs"
+        self.BACKUP_PATH = (
+            self.BASE_STORAGE / "Backup"
+        )
+
+        self.LOG_PATH = (
+            self.BASE_STORAGE / "Logs"
+        )
 
 
 settings = Settings()

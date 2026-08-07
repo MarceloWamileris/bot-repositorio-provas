@@ -25,6 +25,32 @@ async def receber_arquivo(
 
         return
 
+    # Impede envio de álbuns (media groups)
+    if update.message.media_group_id:
+
+        ultimo_media_group = context.user_data.get(
+            "ultimo_media_group"
+        )
+
+        if (
+            ultimo_media_group
+            != update.message.media_group_id
+        ):
+
+            context.user_data["ultimo_media_group"] = (
+                update.message.media_group_id
+            )
+
+            await update.message.reply_text(
+                text=(
+                    "⚠️ Envie apenas um arquivo por vez, respeitando a ordem da prova.\n\n"
+                    "Após cada envio, envie o próximo arquivo ou clique em "
+                    '"✅ Finalizar envio" somente quando tiver enviado toda a prova.'
+                )
+            )
+
+        return
+
     if "arquivos" not in context.user_data:
 
         context.user_data["arquivos"] = []

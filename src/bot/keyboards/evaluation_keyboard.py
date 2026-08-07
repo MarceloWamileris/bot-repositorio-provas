@@ -31,6 +31,14 @@ def evaluation_keyboard():
                 callback_data="avaliacao:AVF",
             )
         ],
+        [
+            InlineKeyboardButton(
+                text="⬅️ Voltar",
+                callback_data="voltar:turno",
+            )
+        ],
     ]
 
-    return InlineKeyboardMarkup(teclado)
+    return InlineKeyboardMarkup(
+        teclado,
+    )

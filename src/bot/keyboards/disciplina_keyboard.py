@@ -32,6 +32,15 @@ def teclado_disciplinas(
             ]
         )
 
+    teclado.append(
+        [
+            InlineKeyboardButton(
+                text="⬅️ Voltar",
+                callback_data="voltar:periodo",
+            )
+        ]
+    )
+
     return InlineKeyboardMarkup(
         teclado,
     )

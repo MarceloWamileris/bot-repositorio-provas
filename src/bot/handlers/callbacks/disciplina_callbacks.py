@@ -13,6 +13,15 @@ from bot.keyboards.teacher_keyboard import (
     teclado_professores,
 )
 
+# NOVO
+from messages.select_turma_fac import (
+    MENSAGEM_TURMA_FAC,
+)
+
+from bot.keyboards.fac_keyboard import (
+    teclado_turma_fac,
+)
+
 
 async def callback_disciplina(
     update: Update,
@@ -61,6 +70,17 @@ async def callback_disciplina(
 
     print("\n==============================\n")
 
+    # EXCEÇÃO PARA FAC
+    if disciplina["codigo"] == "1FAC":
+
+        await query.edit_message_text(
+            text=MENSAGEM_TURMA_FAC,
+            reply_markup=teclado_turma_fac(),
+        )
+
+        return
+
+    # Fluxo normal
     await query.edit_message_text(
         text=MENSAGEM_PROFESSOR,
         reply_markup=teclado_professores(),

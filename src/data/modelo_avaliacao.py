@@ -15,4 +15,7 @@ def nova_avaliacao():
 
         "avaliacao": None,
         "avaliacao_vinculada": None,
+
+        # Apenas para a disciplina 1FAC
+        "turma_fac": None,
     }

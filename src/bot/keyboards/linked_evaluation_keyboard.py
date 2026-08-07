@@ -19,6 +19,14 @@ def linked_evaluation_keyboard():
                 callback_data="vinculada:AV2",
             )
         ],
+        [
+            InlineKeyboardButton(
+                text="⬅️ Voltar",
+                callback_data="voltar:avaliacao",
+            )
+        ],
     ]
 
-    return InlineKeyboardMarkup(teclado)
+    return InlineKeyboardMarkup(
+        teclado,
+    )

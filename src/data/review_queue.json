@@ -3,186 +3,24 @@
         "tipo": "nova",
         "usuario_id": 1706196502,
         "avaliacao": {
-            "periodo": "Terceiro Período",
-            "codigo_disciplina": "3ALG",
-            "nome_disciplina": "Álgebra",
-            "id_professor": 14,
-            "nome_professor": "Cláudio Bispo de Jesus da Costa",
-            "ano": 2026,
-            "semestre": 1,
-            "turno": "Noite",
-            "avaliacao": "AV1"
-        },
-        "arquivos": [
-            {
-                "tipo": "pdf",
-                "file_id": "BQACAgEAAxkBAAIICWpxzrbZ2XE1Z5yobYRDQKOrKRxmAAIYBwACgmmJR1x6Px3oXVHpPQQ",
-                "nome": "pdf_1.pdf",
-                "caminho": "D:\\RepositorioProvas\\Temp\\1706196502\\2d1c164f-d2ad-4a7f-8cb0-fb9f127ab9fc\\pdf_1.pdf"
-            }
-        ],
-        "acervo": null
-    },
-    {
-        "tipo": "nova",
-        "usuario_id": 1706196502,
-        "avaliacao": {
             "periodo": "Primeiro Período",
-            "codigo_disciplina": "1MAB",
-            "nome_disciplina": "Matemática Básica",
-            "id_professor": 1,
-            "nome_professor": "Alfredo Nazareno Pereira Boente",
-            "ano": 2026,
-            "semestre": 2,
-            "turno": "Manhã",
+            "codigo_disciplina": "1LPO",
+            "nome_disciplina": "Língua Portuguesa",
+            "id_professor": 5,
+            "nome_professor": "Vinícius Marques da Silva Ferreira",
+            "ano": 2025,
+            "semestre": 1,
+            "turno": "Tarde",
             "avaliacao": "AV2"
         },
         "arquivos": [
             {
                 "tipo": "pdf",
-                "file_id": "BQACAgEAAxkBAAIIg2pyRbqkd3bMS0W6-TjspT-E-3YuAALpBgACgmmRR3wUv9ieUiwMPQQ",
+                "file_id": "BQACAgEAAxkBAAIUcWp1RuAqLZAgwZJok2DM3l8fVeOfAAIFBwACj6GwR3csiEm_FsE0PQQ",
                 "nome": "pdf_1.pdf",
-                "caminho": "D:\\RepositorioProvas\\Temp\\1706196502\\8210feba-53c4-4da0-97d8-21ba7231acd8\\pdf_1.pdf"
-            },
-            {
-                "tipo": "pdf",
-                "file_id": "BQACAgEAAxkBAAIIhGpyRbo2AAF2YGfyaVdJo-knYmm5nAAC6gYAAoJpkUeASXFTfBjp4j0E",
-                "nome": "pdf_2.pdf",
-                "caminho": "D:\\RepositorioProvas\\Temp\\1706196502\\8210feba-53c4-4da0-97d8-21ba7231acd8\\pdf_2.pdf"
+                "caminho": "D:\\RepositorioProvas\\Temp\\1706196502\\660a456a-1536-4d05-ad0d-ffeb3282e771\\pdf_1.pdf"
             }
         ],
         "acervo": null
-    },
-    {
-        "tipo": "nova",
-        "usuario_id": 1706196502,
-        "avaliacao": {
-            "periodo": "Terceiro Período",
-            "codigo_disciplina": "3ALG",
-            "nome_disciplina": "Álgebra",
-            "id_professor": 14,
-            "nome_professor": "Cláudio Bispo de Jesus da Costa",
-            "ano": 2026,
-            "semestre": 1,
-            "turno": "Noite",
-            "avaliacao": "AV1"
-        },
-        "arquivos": [
-            {
-                "tipo": "pdf",
-                "file_id": "BQACAgEAAxkBAAIImWpyRovKtfYdSl_jKN1qVE6_sj-eAALtBgACgmmRR2hkNyriH8NmPQQ",
-                "nome": "pdf_1.pdf",
-                "caminho": "D:\\RepositorioProvas\\Temp\\1706196502\\d71bd20d-3617-4143-8950-7a39ff731ffc\\pdf_1.pdf"
-            },
-            {
-                "tipo": "imagem",
-                "file_id": "AgACAgEAAxkBAAIIj2pyRhQF-xatajf9Zpdfy8ChMIXiAAL_DGsbgmmRR8CzaXdyF9NEAQADAgADeQADPQQ",
-                "nome": "pagina_1.jpg",
-                "caminho": "D:\\RepositorioProvas\\Temp\\1706196502\\d71bd20d-3617-4143-8950-7a39ff731ffc\\pagina_1.jpg"
-            }
-        ],
-        "acervo": null
-    },
-    {
-        "tipo": "nova",
-        "usuario_id": 1706196502,
-        "avaliacao": {
-            "periodo": "Terceiro Período",
-            "codigo_disciplina": "3ALG",
-            "nome_disciplina": "Álgebra",
-            "id_professor": 14,
-            "nome_professor": "Cláudio Bispo de Jesus da Costa",
-            "ano": 2026,
-            "semestre": 1,
-            "turno": "Noite",
-            "avaliacao": "AV1"
-        },
-        "arquivos": [
-            {
-                "tipo": "pdf",
-                "file_id": "BQACAgEAAxkBAAIKhWpygwFidJZjLc7hwdNxG_12bsrSAAIKBwACgmmRR5IqFOzgBAaTPQQ",
-                "nome": "pdf_1.pdf",
-                "caminho": "D:\\RepositorioProvas\\Temp\\1706196502\\aca25a97-77ca-4a26-a42e-1f3e9c776647\\pdf_1.pdf"
-            }
-        ],
-        "acervo": null
-    },
-    {
-        "tipo": "nova",
-        "usuario_id": 1706196502,
-        "avaliacao": {
-            "periodo": "Quarto Período",
-            "codigo_disciplina": "4UBD",
-            "nome_disciplina": "Utilização de Banco de Dados e SQL",
-            "id_professor": 5,
-            "nome_professor": "Vinícius Marques da Silva Ferreira",
-            "ano": 2023,
-            "semestre": 1,
-            "turno": "Manhã",
-            "avaliacao": "AV1"
-        },
-        "arquivos": [
-            {
-                "tipo": "pdf",
-                "file_id": "BQACAgEAAxkBAAILHGpyxTm6Es45WQojCHjvH6rEMlqCAAIrBwACgmmRRxcUNnRJi_6YPQQ",
-                "nome": "pdf_1.pdf",
-                "caminho": "D:\\RepositorioProvas\\Temp\\1706196502\\4dc1676c-0f1a-41a0-b51c-31312d565403\\pdf_1.pdf"
-            }
-        ],
-        "acervo": null
-    },
-    {
-        "tipo": "nova",
-        "usuario_id": 1706196502,
-        "avaliacao": {
-            "periodo": "Quarto Período",
-            "codigo_disciplina": "4UBD",
-            "nome_disciplina": "Utilização de Banco de Dados e SQL",
-            "id_professor": 5,
-            "nome_professor": "Vinícius Marques da Silva Ferreira",
-            "ano": 2023,
-            "semestre": 1,
-            "turno": "Manhã",
-            "avaliacao": "AV1"
-        },
-        "arquivos": [
-            {
-                "tipo": "pdf",
-                "file_id": "BQACAgEAAxkBAAILjWpyypUN4Om6FgABfdu-iehnfSO99wACMgcAAoJpkUd9i0F6gpp0nz0E",
-                "nome": "pdf_1.pdf",
-                "caminho": "D:\\RepositorioProvas\\Temp\\1706196502\\83ef5040-da93-4e19-aa14-a1ffe47de387\\pdf_1.pdf"
-            }
-        ],
-        "acervo": null
-    },
-    {
-        "tipo": "comparacao",
-        "usuario_id": 1706196502,
-        "avaliacao": {
-            "periodo": "Primeiro Período",
-            "codigo_disciplina": "1FAC",
-            "nome_disciplina": "Fundamentos de Algoritmos de Computação",
-            "id_professor": 9,
-            "nome_professor": "Claudia Ferlin",
-            "ano": 2026,
-            "semestre": 1,
-            "turno": "Noite",
-            "avaliacao": "AV1"
-        },
-        "arquivos": [
-            {
-                "tipo": "imagem",
-                "file_id": "AgACAgEAAxkBAAIN6GpzI_IE6hwoZWqzhW4_1SwJiemRAAI9DWsbgmmZRx4MlIScfO2BAQADAgADeQADPQQ",
-                "nome": "pagina_1.jpg",
-                "caminho": "D:\\RepositorioProvas\\Temp\\1706196502\\e3b18fb6-45d2-45b2-8085-520f84f8d336\\pagina_1.jpg"
-            }
-        ],
-        "acervo": {
-            "paginas": [
-                "D:\\RepositorioProvas\\Provas\\Primeiro Período\\Fundamentos de Algoritmos de Computação (1FAC)\\Claudia Ferlin\\2026-1\\Noite\\AV1\\01.pdf",
-                "D:\\RepositorioProvas\\Provas\\Primeiro Período\\Fundamentos de Algoritmos de Computação (1FAC)\\Claudia Ferlin\\2026-1\\Noite\\AV1\\02.jpg",
-                "D:\\RepositorioProvas\\Provas\\Primeiro Período\\Fundamentos de Algoritmos de Computação (1FAC)\\Claudia Ferlin\\2026-1\\Noite\\AV1\\03.pdf"
-            ]
-        }
     }
 ]

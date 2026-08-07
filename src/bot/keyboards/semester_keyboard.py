@@ -23,4 +23,16 @@ def teclado_semestres(ano: int):
             ]
         )
 
-    return InlineKeyboardMarkup(teclado)
+    # Botão de voltar
+    teclado.append(
+        [
+            InlineKeyboardButton(
+                text="⬅️ Voltar",
+                callback_data="voltar:ano",
+            )
+        ]
+    )
+
+    return InlineKeyboardMarkup(
+        teclado,
+    )

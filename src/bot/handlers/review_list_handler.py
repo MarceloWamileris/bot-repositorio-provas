@@ -1,6 +1,8 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 
+from config.settings import settings
+
 from services.review_queue_service import (
     ReviewQueueService,
 )
@@ -42,6 +44,14 @@ async def listar_revisoes(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
 ):
+
+    if update.effective_user.id != settings.ADMIN_ID:
+
+        await update.message.reply_text(
+            text="⛔ Você não possui permissão para utilizar este comando."
+        )
+
+        return
 
     await enviar_lista_revisoes(
         update.effective_chat.id,

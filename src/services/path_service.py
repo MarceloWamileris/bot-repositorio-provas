@@ -22,10 +22,22 @@ class PathService:
 
         turno = avaliacao["turno"]
 
-        return Path(
+        caminho = Path(
             periodo,
             disciplina,
             professor,
             semestre,
             turno,
         )
+
+        if (
+            avaliacao["codigo_disciplina"]
+            == "1FAC"
+        ):
+
+            caminho = (
+                caminho
+                / avaliacao["turma_fac"]
+            )
+
+        return caminho

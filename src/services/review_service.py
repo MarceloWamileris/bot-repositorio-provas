@@ -1,6 +1,10 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 
+from services.telegram_service import (
+    TelegramService,
+)
+
 from bot.keyboards.review_keyboard import (
     review_keyboard,
 )
@@ -20,8 +24,6 @@ class ReviewService:
         if prova_acervo is None:
             return
 
-        # Salva a prova atual do acervo para ser utilizada
-        # caso o usuário solicite a revisão.
         context.user_data["prova_acervo"] = (
             prova_acervo
         )
@@ -34,19 +36,22 @@ class ReviewService:
 
                 if pagina.suffix.lower() == ".pdf":
 
-                    await context.bot.send_document(
+                    await TelegramService.send_document(
+                        bot=context.bot,
                         chat_id=update.effective_chat.id,
                         document=arquivo,
                     )
 
                 else:
 
-                    await context.bot.send_photo(
+                    await TelegramService.send_photo(
+                        bot=context.bot,
                         chat_id=update.effective_chat.id,
                         photo=arquivo,
                     )
 
-        await context.bot.send_message(
+        await TelegramService.send_message(
+            bot=context.bot,
             chat_id=update.effective_chat.id,
             text=(
                 "⚠️ Esta avaliação já existe no acervo.\n\n"

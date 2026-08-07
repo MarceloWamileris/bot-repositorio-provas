@@ -14,11 +14,16 @@ from bot.utils.review_messages import (
     add_review_acervo_message,
     add_review_message,
     clear_review_messages,
+    clear_review_acervo_messages,
 )
 
 import traceback
 
 from services.storage_service import StorageService
+
+from services.file_service import (
+    FileService,
+)
 
 # ------------------------------------------------------
 # Helpers
@@ -391,7 +396,9 @@ async def callback_compare_reject(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
 ):
+
     query = update.callback_query
+
     await query.answer()
 
     _, _, review_index, submission_index = (
@@ -401,7 +408,9 @@ async def callback_compare_reject(
     review_index = int(review_index)
     submission_index = int(submission_index)
 
-    grupo = buscar_grupo(review_index)
+    grupo = buscar_grupo(
+        review_index,
+    )
 
     if grupo is None:
 
@@ -412,7 +421,21 @@ async def callback_compare_reject(
 
         return
 
-    # guarda a chave da avaliação
+    submissao = buscar_submissao(
+        grupo,
+        submission_index,
+    )
+
+    if submissao is None:
+
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text="⚠️ Esta versão não existe mais.",
+        )
+
+        return
+
+    # Guarda a chave da avaliação
     chave = (
         grupo["avaliacao"]["codigo_disciplina"],
         grupo["avaliacao"]["id_professor"],
@@ -422,10 +445,31 @@ async def callback_compare_reject(
         grupo["avaliacao"]["avaliacao"],
     )
 
-    # remove somente as mensagens da versão atual
+    # Remove apenas as mensagens da submissão atual
     await clear_review_messages(
         context=context,
         chat_id=update.effective_chat.id,
+    )
+
+    # Remove a pasta temporária da submissão rejeitada
+    # if submissao["arquivos"]:
+    #
+    #     pasta_envio = (
+    #         submissao["arquivos"][0]["caminho"].parent
+    #     )
+    #
+    #     FileService.remover_pasta_envio(
+    #         pasta_envio,
+    #     )
+
+    if submissao["arquivos"]:
+
+        pasta_envio = (
+            submissao["arquivos"][0]["caminho"].parent
+    )
+
+        FileService.remover_pasta_envio(
+            pasta_envio,
     )
 
     sucesso = ReviewQueueService.remover_submissao(
@@ -442,7 +486,7 @@ async def callback_compare_reject(
 
         return
 
-    # procura novamente o grupo
+    # Procura novamente o grupo atualizado
     revisoes = ReviewQueueService.listar()
 
     grupo = next(
@@ -456,29 +500,31 @@ async def callback_compare_reject(
                 r["avaliacao"]["semestre"],
                 r["avaliacao"]["turno"],
                 r["avaliacao"]["avaliacao"],
-            )
-            == chave
+            ) == chave
         ),
         None,
     )
 
-    # acabou a comparação
+    # Não restou nenhuma versão
     if grupo is None:
+
+        await clear_review_acervo_messages(
+            context=context,
+            chat_id=update.effective_chat.id,
+        )
 
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text=(
-                "❌ Todas as versões desta prova foram rejeitadas."
-            ),
+            text="❌ Todas as versões desta prova foram rejeitadas.",
         )
 
         return
 
-    # ainda existe outra versão
-    novo_indice = min(
-        submission_index,
-        len(grupo["submissoes"]) - 1,
-    )
+    # Calcula corretamente qual versão mostrar agora
+    if submission_index >= len(grupo["submissoes"]):
+        novo_indice = len(grupo["submissoes"]) - 1
+    else:
+        novo_indice = submission_index
 
     await mostrar_submissao(
         chat_id=update.effective_chat.id,
@@ -502,7 +548,9 @@ async def callback_compare_approve(
     review_index = int(review_index)
     submission_index = int(submission_index)
 
-    grupo = buscar_grupo(review_index)
+    grupo = buscar_grupo(
+        review_index,
+    )
 
     if grupo is None:
 
@@ -546,6 +594,33 @@ async def callback_compare_approve(
         print("ARQUIVOS SALVOS COM SUCESSO")
         print("=" * 50)
 
+        # Remove TODAS as pastas temporárias das versões
+        pastas_removidas = set()
+
+        for versao in grupo["submissoes"]:
+
+            if not versao["arquivos"]:
+                continue
+
+            pasta_envio = (
+                versao["arquivos"][0]["caminho"].parent
+            )
+
+            if pasta_envio in pastas_removidas:
+                continue
+
+            print(
+                f"Removendo pasta temporária: {pasta_envio}"
+            )
+
+            FileService.remover_pasta_envio(
+                pasta_envio,
+            )
+
+            pastas_removidas.add(
+                pasta_envio,
+            )
+
     except Exception:
 
         traceback.print_exc()
@@ -561,6 +636,11 @@ async def callback_compare_approve(
         return
 
     await clear_review_messages(
+        context=context,
+        chat_id=update.effective_chat.id,
+    )
+
+    await clear_review_acervo_messages(
         context=context,
         chat_id=update.effective_chat.id,
     )

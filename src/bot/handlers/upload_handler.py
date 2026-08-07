@@ -21,6 +21,9 @@ async def upload(
 
     context.user_data["arquivos"] = []
 
+    # Reinicia o controle de álbuns (media groups)
+    context.user_data["ultimo_media_group"] = None
+
     context.user_data["pasta_envio"] = (
         FileService.criar_pasta_envio(
             update.effective_user.id

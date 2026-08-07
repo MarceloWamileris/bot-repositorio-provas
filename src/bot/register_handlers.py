@@ -96,6 +96,12 @@ from bot.handlers.callbacks.back_callbacks import (
     callback_back_fac,
 )
 
+from bot.handlers.callbacks.confirm_evaluation_callbacks import (
+    callback_confirm_evaluation,
+    callback_back_confirm_evaluation,
+    callback_back_confirm_linked_evaluation,
+)
+
 def register_commands(application: Application):
 
     application.add_handler(
@@ -259,6 +265,27 @@ def register_callbacks(application: Application):
         CallbackQueryHandler(
             callback_back_linked_evaluation,
             pattern="^voltar:avaliacao$",
+        )
+    )
+
+    application.add_handler(
+        CallbackQueryHandler(
+            callback_confirm_evaluation,
+            pattern=r"^confirm:evaluation$",
+        )
+    )
+
+    application.add_handler(
+        CallbackQueryHandler(
+            callback_back_confirm_evaluation,
+            pattern=r"^back:confirm_evaluation$",
+        )
+    )
+
+    application.add_handler(
+        CallbackQueryHandler(
+            callback_back_confirm_linked_evaluation,
+            pattern=r"^back:confirm_linked_evaluation$",
         )
     )
 

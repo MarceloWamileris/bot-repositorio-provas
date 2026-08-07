@@ -1,7 +1,13 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from services.evaluation_service import EvaluationService
+from messages.confirm_evaluation import (
+    MENSAGEM_CONFIRMACAO,
+)
+
+from bot.keyboards.confirm_evaluation_keyboard import (
+    confirm_evaluation_keyboard,
+)
 
 
 async def callback_linked_evaluation(
@@ -21,7 +27,9 @@ async def callback_linked_evaluation(
         "avaliacao_vinculada"
     ] = avaliacao_vinculada
 
-    context.user_data["etapa"] = "finish"
+    context.user_data["etapa"] = (
+        "confirm_evaluation"
+    )
 
     print("\n========== CADASTRO ==========\n")
 
@@ -31,16 +39,31 @@ async def callback_linked_evaluation(
 
     print("\n==============================\n")
 
-    await EvaluationService.finalizar(
-        update,
-        context,
-    )
+    dados = context.user_data["avaliacao"]
+
+    turma = ""
+
+    if dados.get("turma_fac"):
+
+        turma = (
+            f"Turma: {dados['turma_fac']}\n"
+        )
 
     await query.edit_message_text(
-    text=(
-        "✅ Sua prova foi enviada para análise.\n\n"
-        "Após a aprovação do administrador, ela será adicionada "
-        "ao acervo e publicada nos canais oficiais do projeto."
-
-        )
+        text=MENSAGEM_CONFIRMACAO.format(
+            disciplina=dados["codigo_disciplina"],
+            turma=turma,
+            professor=dados["nome_professor"],
+            ano=dados["ano"],
+            semestre=dados["semestre"],
+            turno=dados["turno"],
+            avaliacao=dados["avaliacao"],
+            avaliacao_vinculada=(
+                f"Avaliação vinculada: "
+                f"{dados['avaliacao_vinculada']}"
+            ),
+        ),
+        reply_markup=confirm_evaluation_keyboard(
+            is_avs=True,
+        ),
     )

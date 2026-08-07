@@ -4,21 +4,175 @@
         "usuario_id": 1706196502,
         "avaliacao": {
             "periodo": "Primeiro Período",
-            "codigo_disciplina": "1LPO",
-            "nome_disciplina": "Língua Portuguesa",
-            "id_professor": 5,
-            "nome_professor": "Vinícius Marques da Silva Ferreira",
-            "ano": 2025,
+            "codigo_disciplina": "1FAC",
+            "nome_disciplina": "Fundamentos de Algoritmos de Computação",
+            "turma_fac": "FAC-A",
+            "id_professor": 9,
+            "nome_professor": "Claudia Ferlin",
+            "ano": 2026,
             "semestre": 1,
-            "turno": "Tarde",
-            "avaliacao": "AV2"
+            "turno": "Noite",
+            "avaliacao": "AV1"
+        },
+        "arquivos": [
+            {
+                "tipo": "imagem",
+                "file_id": "AgACAgEAAxkBAAITy2p1O9RSNC9PZHM-yLGy293C1zjKAAIKDGsbj6GwR-PRki6o73OTAQADAgADeAADPQQ",
+                "nome": "pagina_1.jpg",
+                "caminho": "D:\\RepositorioProvas\\Temp\\1706196502\\ab8a8293-3b6a-423c-a26d-417cb28231e6\\pagina_1.jpg"
+            }
+        ],
+        "acervo": null
+    },
+    {
+        "tipo": "nova",
+        "usuario_id": 1706196502,
+        "avaliacao": {
+            "periodo": "Primeiro Período",
+            "codigo_disciplina": "1FAC",
+            "nome_disciplina": "Fundamentos de Algoritmos de Computação",
+            "turma_fac": "FAC-A",
+            "id_professor": 9,
+            "nome_professor": "Claudia Ferlin",
+            "ano": 2024,
+            "semestre": 1,
+            "turno": "Noite",
+            "avaliacao": "AVF"
         },
         "arquivos": [
             {
                 "tipo": "pdf",
-                "file_id": "BQACAgEAAxkBAAIUcWp1RuAqLZAgwZJok2DM3l8fVeOfAAIFBwACj6GwR3csiEm_FsE0PQQ",
+                "file_id": "BQACAgEAAxkBAAIV6mp1ctCUv0M7DMZwI67EBZdndIpMAAISBwACj6GwR9tAUg3eZKBNPQQ",
                 "nome": "pdf_1.pdf",
-                "caminho": "D:\\RepositorioProvas\\Temp\\1706196502\\660a456a-1536-4d05-ad0d-ffeb3282e771\\pdf_1.pdf"
+                "caminho": "D:\\RepositorioProvas\\Temp\\1706196502\\9cd187fa-d400-4227-ac7b-074316912295\\pdf_1.pdf"
+            }
+        ],
+        "acervo": null
+    },
+    {
+        "tipo": "nova",
+        "usuario_id": 1706196502,
+        "avaliacao": {
+            "periodo": "Primeiro Período",
+            "codigo_disciplina": "1FAC",
+            "nome_disciplina": "Fundamentos de Algoritmos de Computação",
+            "turma_fac": "FAC-A",
+            "id_professor": 9,
+            "nome_professor": "Claudia Ferlin",
+            "ano": 2023,
+            "semestre": 1,
+            "turno": "Noite",
+            "avaliacao": "AV1"
+        },
+        "arquivos": [
+            {
+                "tipo": "imagem",
+                "file_id": "AgACAgEAAxkBAAIVgWp1aUyVB8-1a06OQUkPrdSRUMouAAI3DGsbj6GwR7Rm8vYoX8EbAQADAgADeQADPQQ",
+                "nome": "pagina_1.jpg",
+                "caminho": "D:\\RepositorioProvas\\Temp\\1706196502\\adb3ab2b-59b3-4ec1-8aa8-4c50d505bad6\\pagina_1.jpg"
+            }
+        ],
+        "acervo": null
+    },
+    {
+        "tipo": "nova",
+        "usuario_id": 1706196502,
+        "avaliacao": {
+            "periodo": "Primeiro Período",
+            "codigo_disciplina": "1FAC",
+            "nome_disciplina": "Fundamentos de Algoritmos de Computação",
+            "turma_fac": "FAC-A",
+            "id_professor": 9,
+            "nome_professor": "Claudia Ferlin",
+            "ano": 2021,
+            "semestre": 1,
+            "turno": "Manhã",
+            "avaliacao": "AVS",
+            "avaliacao_vinculada": "AV2"
+        },
+        "arquivos": [
+            {
+                "tipo": "pdf",
+                "file_id": "BQACAgEAAxkBAAIV-Gp1c3D4mvERWXEhhGZLBjDGglhkAAITBwACj6GwRzrVfa4GQQJIPQQ",
+                "nome": "pdf_1.pdf",
+                "caminho": "D:\\RepositorioProvas\\Temp\\1706196502\\8183eab8-4412-41b6-a488-5a2d3a51e503\\pdf_1.pdf"
+            }
+        ],
+        "acervo": null
+    },
+    {
+        "tipo": "nova",
+        "usuario_id": 1706196502,
+        "avaliacao": {
+            "periodo": "Primeiro Período",
+            "codigo_disciplina": "1FAC",
+            "nome_disciplina": "Fundamentos de Algoritmos de Computação",
+            "turma_fac": "FAC-B",
+            "id_professor": 8,
+            "nome_professor": "Miguel Carvalho",
+            "ano": 2021,
+            "semestre": 1,
+            "turno": "Tarde",
+            "avaliacao": "AVS",
+            "avaliacao_vinculada": "AV1"
+        },
+        "arquivos": [
+            {
+                "tipo": "pdf",
+                "file_id": "BQACAgEAAxkBAAIWCGp1eJCiVevLxCAxLBs2K6g1TtLJAAIUBwACj6GwRwSyTAhDgRZgPQQ",
+                "nome": "pdf_1.pdf",
+                "caminho": "D:\\RepositorioProvas\\Temp\\1706196502\\991c0656-1aa9-4864-8fed-bf6ab64e627b\\pdf_1.pdf"
+            }
+        ],
+        "acervo": null
+    },
+    {
+        "tipo": "nova",
+        "usuario_id": 1706196502,
+        "avaliacao": {
+            "periodo": "Primeiro Período",
+            "codigo_disciplina": "1FAC",
+            "nome_disciplina": "Fundamentos de Algoritmos de Computação",
+            "turma_fac": "FAC-B",
+            "id_professor": 12,
+            "nome_professor": "Wagner da Silva Zanco",
+            "ano": 2023,
+            "semestre": 1,
+            "turno": "Tarde",
+            "avaliacao": "AVS",
+            "avaliacao_vinculada": "AV1"
+        },
+        "arquivos": [
+            {
+                "tipo": "imagem",
+                "file_id": "AgACAgEAAxkBAAITy2p1O9RSNC9PZHM-yLGy293C1zjKAAIKDGsbj6GwR-PRki6o73OTAQADAgADeAADPQQ",
+                "nome": "pagina_1.jpg",
+                "caminho": "D:\\RepositorioProvas\\Temp\\1706196502\\c5ce52b3-8bf8-44cd-aba7-c8d0a49f7005\\pagina_1.jpg"
+            }
+        ],
+        "acervo": null
+    },
+    {
+        "tipo": "nova",
+        "usuario_id": 1706196502,
+        "avaliacao": {
+            "periodo": "Primeiro Período",
+            "codigo_disciplina": "1FAC",
+            "nome_disciplina": "Fundamentos de Algoritmos de Computação",
+            "turma_fac": "FAC-B",
+            "id_professor": 3,
+            "nome_professor": "Nelson Luis Soares Bezerra",
+            "ano": 2020,
+            "semestre": 1,
+            "turno": "Manhã",
+            "avaliacao": "AVF"
+        },
+        "arquivos": [
+            {
+                "tipo": "imagem",
+                "file_id": "AgACAgEAAxkBAAITy2p1O9RSNC9PZHM-yLGy293C1zjKAAIKDGsbj6GwR-PRki6o73OTAQADAgADeAADPQQ",
+                "nome": "pagina_1.jpg",
+                "caminho": "D:\\RepositorioProvas\\Temp\\1706196502\\67a3bc6f-8241-4880-b231-c3751dba16d0\\pagina_1.jpg"
             }
         ],
         "acervo": null

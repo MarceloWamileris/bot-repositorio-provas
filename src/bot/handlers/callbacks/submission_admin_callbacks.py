@@ -467,6 +467,10 @@ async def callback_submission_approve(
         )
         return
 
+    havia_multiplas_versoes = (
+        len(grupo["submissoes"]) > 1
+    )
+
     try:
         for arquivo in submissao["arquivos"]:
             StorageService.armazenar_arquivo(
@@ -474,17 +478,58 @@ async def callback_submission_approve(
                 arquivo["caminho"],
             )
 
+        # Remove a pasta temporária da versão aprovada
         if submissao["arquivos"]:
 
             pasta_envio = (
-            submissao["arquivos"][0]["caminho"].parent
-        )
+                submissao["arquivos"][0]["caminho"].parent
+            )
 
-        FileService.remover_pasta_envio(
-            pasta_envio,
-        )
+            print("=" * 60)
+            print("APAGANDO PASTA DA VERSÃO APROVADA")
+            print(pasta_envio)
+            print("=" * 60)
 
-    except Exception as erro:
+            FileService.remover_pasta_envio(
+                pasta_envio,
+            )
+
+        # Remove também as pastas das versões descartadas
+        if havia_multiplas_versoes:
+
+            print("=" * 60)
+            print("TOTAL DE VERSÕES:", len(grupo["submissoes"]))
+            print("VERSÃO APROVADA:", submission_index)
+            print("=" * 60)
+
+            for indice, outra_submissao in enumerate(
+                grupo["submissoes"]
+            ):
+
+                print("-" * 40)
+                print("ITERAÇÃO:", indice)
+
+                if indice == submission_index:
+                    print(">> Pulando versão aprovada")
+                    continue
+
+                if outra_submissao["arquivos"]:
+
+                    pasta_envio = (
+                        outra_submissao["arquivos"][0]["caminho"].parent
+                    )
+
+                    print(">> APAGANDO PASTA DA VERSÃO DESCARTADA")
+                    print(pasta_envio)
+
+                    FileService.remover_pasta_envio(
+                        pasta_envio,
+                    )
+
+                else:
+                    print(">> Esta submissão não possui arquivos.")
+
+    except Exception:
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
             text=(
@@ -499,8 +544,6 @@ async def callback_submission_approve(
         context=context,
         chat_id=update.effective_chat.id,
     )
-
-    havia_multiplas_versoes = len(grupo["submissoes"]) > 1
 
     if havia_multiplas_versoes:
         sucesso = ReviewQueueService.remover_revisao(
@@ -548,19 +591,41 @@ async def callback_submission_reject(
     _, _, review_index, submission_index = (
         query.data.split(":")
     )
+
     review_index = int(review_index)
     submission_index = int(submission_index)
 
-    grupo = buscar_grupo(review_index)
+    grupo = buscar_grupo(
+        review_index,
+    )
 
     if grupo is None:
+
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
             text=MSG_REVISAO_INDISPONIVEL,
         )
+
         return
 
-    chave = chave_da_avaliacao(grupo)
+    submissao = buscar_submissao(
+        grupo,
+        submission_index,
+    )
+
+    if submissao is None:
+
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=MSG_VERSAO_INDISPONIVEL,
+        )
+
+        return
+
+    # Guarda a chave da avaliação
+    chave = chave_da_avaliacao(
+        grupo,
+    )
 
     # Remove todas as mensagens da versão atual
     await clear_review_messages(
@@ -568,32 +633,50 @@ async def callback_submission_reject(
         chat_id=update.effective_chat.id,
     )
 
+    # Remove a pasta temporária da submissão rejeitada
+    if submissao["arquivos"]:
+
+        pasta_envio = (
+            submissao["arquivos"][0]["caminho"].parent
+        )
+
+        FileService.remover_pasta_envio(
+            pasta_envio,
+        )
+
     sucesso = ReviewQueueService.remover_submissao(
         review_index,
         submission_index,
     )
 
     if not sucesso:
+
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
             text=MSG_REVISAO_INDISPONIVEL,
         )
+
         return
 
-    # Recarrega a fila pela chave (o índice pode ter mudado)
-    grupo = buscar_grupo_por_chave(chave)
+    # Recarrega a fila pela chave
+    grupo = buscar_grupo_por_chave(
+        chave,
+    )
 
     # Não existe mais nenhuma versão
     if grupo is None:
+
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text="❌ Todas as versões desta prova foram rejeitadas.",
+            text=(
+                "❌ Todas as versões desta prova foram rejeitadas."
+            ),
             reply_markup=submission_success_keyboard(),
         )
+
         return
 
-    # Ainda existem versões -> mostra a versão mais próxima
-    # da posição em que o administrador estava
+    # Ainda existem versões -> mostra a próxima
     novo_indice = min(
         submission_index,
         len(grupo["submissoes"]) - 1,

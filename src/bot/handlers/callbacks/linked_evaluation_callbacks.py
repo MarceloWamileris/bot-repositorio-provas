@@ -37,5 +37,10 @@ async def callback_linked_evaluation(
     )
 
     await query.edit_message_text(
-        text="✅ Cadastro concluído!"
+    text=(
+        "✅ Sua prova foi enviada para análise.\n\n"
+        "Após a aprovação do administrador, ela será adicionada "
+        "ao acervo e publicada nos canais oficiais do projeto."
+
+        )
     )

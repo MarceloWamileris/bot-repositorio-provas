@@ -18,6 +18,9 @@ from bot.handlers.callbacks.menu_callbacks import (
     callback_enviar,
     callback_consultar,
     callback_ajuda,
+    callback_voltar_menu,
+    callback_consultar_github,
+    callback_consultar_telegram,
 )
 
 from bot.handlers.callbacks.finish_callbacks import (
@@ -102,6 +105,10 @@ from bot.handlers.callbacks.confirm_evaluation_callbacks import (
     callback_back_confirm_linked_evaluation,
 )
 
+from bot.handlers.clean_handler import clean
+
+
+
 def register_commands(application: Application):
 
     application.add_handler(
@@ -118,6 +125,12 @@ def register_commands(application: Application):
         )
     )
 
+    application.add_handler(
+        CommandHandler(
+            "clean",
+            clean,
+        )
+    )
 
 def register_callbacks(application: Application):
 
@@ -137,8 +150,29 @@ def register_callbacks(application: Application):
 
     application.add_handler(
         CallbackQueryHandler(
+            callback_consultar_github,
+            pattern="^consultar:github$",
+        )
+    )
+
+    application.add_handler(
+        CallbackQueryHandler(
+            callback_consultar_telegram,
+            pattern="^consultar:telegram$",
+        )
+    )
+
+    application.add_handler(
+        CallbackQueryHandler(
             callback_ajuda,
             pattern="^ajuda$",
+        )
+    )
+
+    application.add_handler(
+        CallbackQueryHandler(
+            callback_voltar_menu,
+            pattern="^voltar_menu$",
         )
     )
 
@@ -399,7 +433,7 @@ def register_messages(application: Application):
 
     application.add_handler(
         MessageHandler(
-            filters.PHOTO | filters.Document.PDF,
+            filters.PHOTO | filters.Document.ALL,
             receber_arquivo,
         )
     )

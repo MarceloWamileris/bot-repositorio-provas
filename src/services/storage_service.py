@@ -18,8 +18,10 @@ class StorageService:
             avaliacao,
         )
 
-        diretorio_turno = FileService.criar_diretorio_provas(
-            caminho,
+        diretorio_turno = (
+            FileService.criar_diretorio_provas(
+                caminho,
+            )
         )
 
         nome_avaliacao = (
@@ -88,10 +90,13 @@ class StorageService:
         cls,
         avaliacao: dict,
         arquivos: list[Path],
-    ):
+    ) -> list[Path]:
         """
         Substitui completamente uma avaliação existente
         pelos arquivos aprovados na comparação.
+
+        Retorna os caminhos finais dos arquivos
+        armazenados no acervo.
         """
 
         diretorio = cls.preparar_destino(
@@ -109,6 +114,8 @@ class StorageService:
             exist_ok=True,
         )
 
+        arquivos_salvos = []
+
         for indice, arquivo in enumerate(
             arquivos,
             start=1,
@@ -124,4 +131,8 @@ class StorageService:
                 destino,
             )
 
-        return diretorio
+            arquivos_salvos.append(
+                destino,
+            )
+
+        return arquivos_salvos

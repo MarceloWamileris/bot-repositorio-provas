@@ -36,13 +36,10 @@ async def callback_confirm_evaluation(
     )
 
     if resultado == "duplicado":
-
         await query.delete_message()
-
         return
 
     if resultado == "fila":
-
         await query.edit_message_text(
             text=(
                 "✅ Sua prova foi enviada para análise.\n\n"
@@ -50,18 +47,15 @@ async def callback_confirm_evaluation(
                 "ao acervo e publicada nos canais oficiais do projeto."
             )
         )
-
         return
 
     if resultado == "sucesso":
-
         await query.edit_message_text(
             text=(
                 "✅ Sua prova foi enviada com sucesso!\n\n"
                 "Ela já foi adicionada ao acervo."
             )
         )
-
         return
 
     await query.edit_message_text(
@@ -81,9 +75,7 @@ async def callback_back_confirm_evaluation(
     await query.answer()
 
     avaliacao = context.user_data["avaliacao"]
-
     avaliacao["avaliacao"] = None
-
     context.user_data["etapa"] = "evaluation"
 
     await query.edit_message_text(
@@ -101,9 +93,7 @@ async def callback_back_confirm_linked_evaluation(
     await query.answer()
 
     avaliacao = context.user_data["avaliacao"]
-
     avaliacao["avaliacao_vinculada"] = None
-
     context.user_data["etapa"] = "linked_evaluation"
 
     await query.edit_message_text(

@@ -3,7 +3,14 @@ import shutil
 from pathlib import Path
 from uuid import uuid4
 
+from PIL import Image
+from pillow_heif import register_heif_opener
+
 from config.settings import settings
+
+
+# Habilita suporte ao formato HEIC/HEIF
+register_heif_opener()
 
 
 class FileService:
@@ -67,3 +74,28 @@ class FileService:
             shutil.rmtree(
                 pasta,
             )
+
+    @classmethod
+    def converter_heic_para_jpg(
+        cls,
+        caminho_heic: Path,
+    ) -> Path:
+
+        caminho_jpg = caminho_heic.with_suffix(
+            ".jpg"
+        )
+
+        imagem = Image.open(
+            caminho_heic,
+        )
+
+        imagem.save(
+            caminho_jpg,
+            format="JPEG",
+            quality=95,
+        )
+
+        # Remove o arquivo HEIC original
+        caminho_heic.unlink()
+
+        return caminho_jpg

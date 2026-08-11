@@ -19,6 +19,10 @@ from bot.keyboards.semester_keyboard import (
     teclado_semestres,
 )
 
+from bot.utils.clean_messages import (
+    add_clean_message,
+)
+
 
 async def receber_ano(
     update: Update,
@@ -49,6 +53,11 @@ async def receber_ano(
 
         context.user_data["mensagem_erro_ano_id"] = (
             mensagem.message_id
+        )
+
+        add_clean_message(
+            context,
+            mensagem.message_id,
         )
 
         return
@@ -111,9 +120,14 @@ async def receber_ano(
 
     print("\n==============================\n")
 
-    await update.message.reply_text(
+    mensagem = await update.message.reply_text(
         text=MENSAGEM_SEMESTRE,
         reply_markup=teclado_semestres(
             int(ano),
         ),
+    )
+
+    add_clean_message(
+        context,
+        mensagem.message_id,
     )

@@ -9,6 +9,10 @@ from bot.keyboards.shift_keyboard import (
     shift_keyboard,
 )
 
+from bot.utils.clean_messages import (
+    add_clean_message,
+)
+
 
 async def callback_semester(
     update: Update,
@@ -40,4 +44,9 @@ async def callback_semester(
     await query.edit_message_text(
         text=MENSAGEM_TURNO,
         reply_markup=shift_keyboard(),
+    )
+
+    add_clean_message(
+        context,
+        query.message.message_id,
     )

@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from telegram import Update
 from telegram.ext import ContextTypes
 
@@ -7,11 +9,47 @@ from bot.keyboards.finish_keyboard import (
     teclado_finalizar,
 )
 
+from bot.utils.validar_assinatura import validar_assinatura
+
+from bot.utils.clean_messages import (
+    add_clean_message,
+)
+
+
+EXTENSOES_PERMITIDAS = {
+    ".pdf",
+#    ".txt",
+#    ".docx",
+    ".png",
+    ".jpg",
+    ".jpeg",
+#    ".heic",
+#    ".webp",
+}
+
+MAX_ARQUIVOS = 10
+
+MAX_TAMANHO_MB = 20
+
+MAX_TAMANHO_BYTES = (
+    MAX_TAMANHO_MB * 1024 * 1024
+)
+
 
 async def receber_arquivo(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
 ):
+
+    # ------------------------
+    # DEBUG
+    # ------------------------
+    print("=" * 60)
+    print("DEBUG UPDATE")
+    print("document:", update.message.document)
+    print("photo:", update.message.photo)
+    print("text:", update.message.text)
+    print("=" * 60)
 
     if context.user_data.get("etapa") != "upload":
 
@@ -57,72 +95,232 @@ async def receber_arquivo(
 
     pasta_envio = context.user_data["pasta_envio"]
 
+    # ------------------------
+    # Limite de quantidade
+    # ------------------------
+    if len(context.user_data["arquivos"]) >= MAX_ARQUIVOS:
+
+        await update.message.reply_text(
+            text=(
+                f"❌ Você atingiu o limite de {MAX_ARQUIVOS} arquivos por envio.\n\n"
+                "Se sua avaliação possuir muitas páginas, prefira agrupá-las em um único PDF."
+            ),
+        )
+
+        return
+
+    # ------------------------
+    # Variáveis que serão preenchidas
+    # tanto pelo caminho "documento"
+    # quanto pelo caminho "foto"
+    # ------------------------
+    telegram_file = None
+    extensao = None
+    tipo = None
+    prefixo = None
+    file_id = None
+
     if update.message.document:
 
         arquivo = update.message.document
 
+        # Nome original enviado pelo usuário
+        nome_original = (
+            arquivo.file_name or ""
+        )
+
+        # Extensão do arquivo
+        extensao = (
+            Path(nome_original)
+            .suffix
+            .lower()
+        )
+
+        # DEBUG
+        print("=" * 50)
+        print("ARQUIVO RECEBIDO")
+        print(f"Nome original: {nome_original}")
+        print(f"Extensão: {extensao}")
+        print("=" * 50)
+
+        # Validação das extensões
+        if extensao not in EXTENSOES_PERMITIDAS:
+
+            await update.message.reply_text(
+                text=(
+                    "❌ Este tipo de arquivo não é permitido.\n\n"
+                    "Formatos aceitos:\n"
+                    "• PDF\n"
+                    #"• DOCX\n"
+                    #"• TXT\n"
+                    "• JPG\n"
+                    "• JPEG\n"
+                    "• PNG\n"
+                    #"• WEBP\n"
+                    #"• HEIC"
+                ),
+            )
+
+            return
+
+        # ------------------------
+        # Validação do tamanho
+        # ------------------------
+        if (
+            arquivo.file_size
+            and arquivo.file_size > MAX_TAMANHO_BYTES
+        ):
+
+            await update.message.reply_text(
+                text=(
+                    f"❌ O arquivo excede o tamanho máximo permitido de "
+                    f"{MAX_TAMANHO_MB} MB."
+                ),
+            )
+
+            return
+
+        # ------------------------
+        # Descobre o TIPO do arquivo
+        # ------------------------
+        if extensao == ".pdf":
+
+            tipo = "pdf"
+            prefixo = "pdf"
+
+        elif extensao == ".docx":
+
+            tipo = "docx"
+            prefixo = "documento"
+
+        elif extensao == ".txt":
+
+            tipo = "txt"
+            prefixo = "texto"
+
+        elif extensao in {
+            ".jpg",
+            ".jpeg",
+            ".png",
+            ".heic",
+            ".webp",
+        }:
+
+            tipo = "imagem"
+            prefixo = "pagina"
+
         telegram_file = await arquivo.get_file()
 
-        quantidade_pdfs = sum(
-            1
-            for arquivo_salvo in context.user_data["arquivos"]
-            if arquivo_salvo["tipo"] == "pdf"
-        )
-
-        nome_arquivo = (
-            f"pdf_{quantidade_pdfs + 1}.pdf"
-        )
-
-        caminho = pasta_envio / nome_arquivo
-
-        await telegram_file.download_to_drive(
-            caminho
-        )
-
-        context.user_data["arquivos"].append(
-            {
-                "tipo": "pdf",
-                "file_id": arquivo.file_id,
-                "nome": nome_arquivo,
-                "caminho": caminho,
-            }
-        )
+        file_id = arquivo.file_id
 
     elif update.message.photo:
 
         foto = update.message.photo[-1]
 
+        if (
+            foto.file_size
+            and foto.file_size > MAX_TAMANHO_BYTES
+        ):
+
+            await update.message.reply_text(
+                text=(
+                    f"❌ O arquivo excede o tamanho máximo permitido de "
+                    f"{MAX_TAMANHO_MB} MB."
+                ),
+            )
+
+            return
+
+        tipo = "imagem"
+        prefixo = "pagina"
+
+        # Fotos enviadas como imagem do Telegram
+        # sempre chegam convertidas para JPG.
+        extensao = ".jpg"
+
         telegram_file = await foto.get_file()
 
-        quantidade_imagens = sum(
-            1
-            for arquivo_salvo in context.user_data["arquivos"]
-            if arquivo_salvo["tipo"] == "imagem"
-        )
+        file_id = foto.file_id
 
-        nome_arquivo = (
-            f"pagina_{quantidade_imagens + 1}.jpg"
-        )
+    # ------------------------
+    # Só continua se um arquivo
+    # realmente foi identificado.
+    # ------------------------
+    if telegram_file is None:
 
-        caminho = pasta_envio / nome_arquivo
+        return
+
+    quantidade_do_tipo = sum(
+        1
+        for arquivo_salvo
+        in context.user_data["arquivos"]
+        if arquivo_salvo["tipo"] == tipo
+    )
+
+    nome_arquivo = (
+        f"{prefixo}_{quantidade_do_tipo + 1}{extensao}"
+    )
+
+    caminho = pasta_envio / nome_arquivo
+
+    try:
 
         await telegram_file.download_to_drive(
             caminho
         )
 
-        context.user_data["arquivos"].append(
-            {
-                "tipo": "imagem",
-                "file_id": foto.file_id,
-                "nome": nome_arquivo,
-                "caminho": caminho,
-            }
+    except Exception as erro:
+
+        print(
+            f"ERRO AO SALVAR: {erro}"
         )
+
+        await update.message.reply_text(
+            "❌ Não foi possível salvar o arquivo. Tente novamente."
+        )
+
+        return
+
+    # ------------------------
+    # Validação da assinatura
+    # ------------------------
+    if not validar_assinatura(caminho):
+
+        caminho.unlink(
+            missing_ok=True
+        )
+
+        await update.message.reply_text(
+            text=(
+                "❌ O conteúdo do arquivo não corresponde à extensão enviada.\n\n"
+                "Verifique o arquivo e tente novamente."
+            ),
+        )
+
+        return
+
+    context.user_data["arquivos"].append(
+        {
+            "tipo": tipo,
+            "file_id": file_id,
+            "nome": nome_arquivo,
+            "caminho": caminho,
+        }
+    )
 
     quantidade = len(
         context.user_data["arquivos"]
     )
 
+    # ------------------------
+    # Remove a mensagem anterior
+    # de acompanhamento do upload.
+    #
+    # IMPORTANTE:
+    # também remove o ID da lista
+    # do /clean, pois a mensagem já
+    # foi apagada aqui.
+    # ------------------------
     message_id = context.user_data.get(
         "mensagem_upload_id"
     )
@@ -136,10 +334,29 @@ async def receber_arquivo(
                 message_id=message_id,
             )
 
-        except Exception:
+        except Exception as erro:
 
-            pass
+            print(
+                f"ERRO AO APAGAR MENSAGEM: {erro}"
+            )
 
+        # Remove o ID que já foi tratado
+        # da lista usada pelo /clean.
+        clean_messages = context.user_data.get(
+            "clean_messages",
+            [],
+        )
+
+        context.user_data["clean_messages"] = [
+            mensagem_id
+            for mensagem_id in clean_messages
+            if mensagem_id != message_id
+        ]
+
+    # ------------------------
+    # Cria a nova mensagem
+    # de acompanhamento.
+    # ------------------------
     mensagem = await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=MENSAGEM_UPLOAD.format(
@@ -150,4 +367,11 @@ async def receber_arquivo(
 
     context.user_data["mensagem_upload_id"] = (
         mensagem.message_id
+    )
+
+    # Registra a nova mensagem
+    # para o /clean.
+    add_clean_message(
+        context,
+        mensagem.message_id,
     )

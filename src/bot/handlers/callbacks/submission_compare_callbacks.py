@@ -2,6 +2,7 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from services.proof_service import ProofService
+
 from services.review_queue_service import (
     ReviewQueueService,
 )
@@ -19,11 +20,22 @@ from bot.utils.review_messages import (
 
 import traceback
 
-from services.storage_service import StorageService
+from services.storage_service import (
+    StorageService,
+)
 
 from services.file_service import (
     FileService,
 )
+
+from services.telegram_publication_queue_service import (
+    TelegramPublicationQueueService,
+)
+
+from services.github_publication_queue_service import (
+    GitHubPublicationQueueService,
+)
+
 
 # ------------------------------------------------------
 # Helpers
@@ -98,20 +110,25 @@ async def mostrar_acervo(
     # ------------------------
     # Cabeçalho
     # ------------------------
+
     msg = await context.bot.send_message(
         chat_id=chat_id,
         text=(
             "━━━━━━━━━━━━━━━━━━━━━━\n\n"
             "📚 PROVA ATUAL DO ACERVO\n\n"
-            f"Disciplina: {avaliacao['codigo_disciplina']}\n"
-            f"Professor: {avaliacao['nome_professor']}\n"
+            f"Disciplina: "
+            f"{avaliacao['codigo_disciplina']}\n"
+            f"Professor: "
+            f"{avaliacao['nome_professor']}\n"
             f"Ano/Semestre: "
             f"{avaliacao['ano']}-"
             f"{avaliacao['semestre']}\n"
             f"Turno: {avaliacao['turno']}\n"
-            f"Avaliação: {avaliacao['avaliacao']}\n\n"
+            f"Avaliação: "
+            f"{avaliacao['avaliacao']}\n\n"
             "━━━━━━━━━━━━━━━━━━━━━━\n\n"
-            "Compare esta prova com a versão enviada pelo aluno."
+            "Compare esta prova com a versão "
+            "enviada pelo aluno."
         ),
     )
 
@@ -123,6 +140,7 @@ async def mostrar_acervo(
     # ------------------------
     # Arquivos
     # ------------------------
+
     for pagina in paginas:
 
         with pagina.open("rb") as arquivo:
@@ -179,6 +197,7 @@ async def mostrar_submissao(
     # ------------------------
     # Cabeçalho
     # ------------------------
+
     msg = await context.bot.send_message(
         chat_id=chat_id,
         text=(
@@ -211,6 +230,7 @@ async def mostrar_submissao(
     # ------------------------
     # Arquivos
     # ------------------------
+
     for arquivo in submissao["arquivos"]:
 
         if arquivo["tipo"] == "imagem":
@@ -235,6 +255,7 @@ async def mostrar_submissao(
     # ------------------------
     # Botões
     # ------------------------
+
     msg = await context.bot.send_message(
         chat_id=chat_id,
         text="📄 O que deseja fazer com esta versão?",
@@ -282,10 +303,15 @@ async def mostrar_comparacao(
     )
 
 
+# ------------------------------------------------------
+# Próxima versão
+# ------------------------------------------------------
+
 async def callback_compare_next(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
 ):
+
     query = update.callback_query
 
     _, _, review_index, submission_index = (
@@ -325,6 +351,7 @@ async def callback_compare_next(
 
     # Remove apenas a versão atual.
     # A prova do acervo permanece.
+
     await clear_review_messages(
         context=context,
         chat_id=update.effective_chat.id,
@@ -338,10 +365,15 @@ async def callback_compare_next(
     )
 
 
+# ------------------------------------------------------
+# Versão anterior
+# ------------------------------------------------------
+
 async def callback_compare_previous(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
 ):
+
     query = update.callback_query
 
     _, _, review_index, submission_index = (
@@ -379,6 +411,7 @@ async def callback_compare_previous(
 
     # Remove apenas a versão atual.
     # A prova do acervo permanece.
+
     await clear_review_messages(
         context=context,
         chat_id=update.effective_chat.id,
@@ -391,6 +424,10 @@ async def callback_compare_previous(
         submission_index=novo_indice,
     )
 
+
+# ------------------------------------------------------
+# Rejeitar versão
+# ------------------------------------------------------
 
 async def callback_compare_reject(
     update: Update,
@@ -416,7 +453,10 @@ async def callback_compare_reject(
 
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text="⚠️ Esta revisão não está mais disponível.",
+            text=(
+                "⚠️ Esta revisão não está "
+                "mais disponível."
+            ),
         )
 
         return
@@ -430,12 +470,15 @@ async def callback_compare_reject(
 
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text="⚠️ Esta versão não existe mais.",
+            text=(
+                "⚠️ Esta versão não existe mais."
+            ),
         )
 
         return
 
     # Guarda a chave da avaliação
+
     chave = (
         grupo["avaliacao"]["codigo_disciplina"],
         grupo["avaliacao"]["id_professor"],
@@ -446,47 +489,45 @@ async def callback_compare_reject(
     )
 
     # Remove apenas as mensagens da submissão atual
+
     await clear_review_messages(
         context=context,
         chat_id=update.effective_chat.id,
     )
 
     # Remove a pasta temporária da submissão rejeitada
-    # if submissao["arquivos"]:
-    #
-    #     pasta_envio = (
-    #         submissao["arquivos"][0]["caminho"].parent
-    #     )
-    #
-    #     FileService.remover_pasta_envio(
-    #         pasta_envio,
-    #     )
 
     if submissao["arquivos"]:
 
         pasta_envio = (
             submissao["arquivos"][0]["caminho"].parent
-    )
+        )
 
         FileService.remover_pasta_envio(
             pasta_envio,
-    )
+        )
 
-    sucesso = ReviewQueueService.remover_submissao(
-        review_index,
-        submission_index,
+    sucesso = (
+        ReviewQueueService.remover_submissao(
+            review_index,
+            submission_index,
+        )
     )
 
     if not sucesso:
 
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text="⚠️ Não foi possível remover esta versão.",
+            text=(
+                "⚠️ Não foi possível remover "
+                "esta versão."
+            ),
         )
 
         return
 
     # Procura novamente o grupo atualizado
+
     revisoes = ReviewQueueService.listar()
 
     grupo = next(
@@ -506,6 +547,7 @@ async def callback_compare_reject(
     )
 
     # Não restou nenhuma versão
+
     if grupo is None:
 
         await clear_review_acervo_messages(
@@ -515,15 +557,26 @@ async def callback_compare_reject(
 
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text="❌ Todas as versões desta prova foram rejeitadas.",
+            text=(
+                "❌ Todas as versões desta prova "
+                "foram rejeitadas."
+            ),
         )
 
         return
 
     # Calcula corretamente qual versão mostrar agora
-    if submission_index >= len(grupo["submissoes"]):
-        novo_indice = len(grupo["submissoes"]) - 1
+
+    if submission_index >= len(
+        grupo["submissoes"]
+    ):
+
+        novo_indice = (
+            len(grupo["submissoes"]) - 1
+        )
+
     else:
+
         novo_indice = submission_index
 
     await mostrar_submissao(
@@ -534,11 +587,17 @@ async def callback_compare_reject(
     )
 
 
+# ------------------------------------------------------
+# Aprovar / substituir prova do acervo
+# ------------------------------------------------------
+
 async def callback_compare_approve(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
 ):
+
     query = update.callback_query
+
     await query.answer()
 
     _, _, review_index, submission_index = (
@@ -556,7 +615,9 @@ async def callback_compare_approve(
 
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text="⚠️ Esta revisão não existe mais.",
+            text=(
+                "⚠️ Esta revisão não existe mais."
+            ),
         )
 
         return
@@ -570,7 +631,9 @@ async def callback_compare_approve(
 
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text="⚠️ Esta versão não existe mais.",
+            text=(
+                "⚠️ Esta versão não existe mais."
+            ),
         )
 
         return
@@ -582,19 +645,47 @@ async def callback_compare_approve(
 
     try:
 
-        StorageService.substituir_avaliacao(
-            grupo["avaliacao"],
-            [
-                arquivo["caminho"]
-                for arquivo in submissao["arquivos"]
-            ],
+        # ------------------------------------------
+        # 1. Substitui a prova existente no acervo
+        # ------------------------------------------
+
+        arquivos_salvos = (
+            StorageService.substituir_avaliacao(
+                grupo["avaliacao"],
+                [
+                    arquivo["caminho"]
+                    for arquivo in submissao["arquivos"]
+                ],
+            )
         )
 
         print("=" * 50)
         print("ARQUIVOS SALVOS COM SUCESSO")
+        print(arquivos_salvos)
         print("=" * 50)
 
-        # Remove TODAS as pastas temporárias das versões
+        # ------------------------------------------
+        # 2. Adiciona publicação ao Telegram
+        # ------------------------------------------
+
+        TelegramPublicationQueueService.adicionar(
+            avaliacao=grupo["avaliacao"],
+            arquivos=arquivos_salvos,
+        )
+
+        # ------------------------------------------
+        # 3. Adiciona sincronização ao GitHub
+        # ------------------------------------------
+
+        GitHubPublicationQueueService.adicionar(
+            avaliacao=grupo["avaliacao"],
+            operacao="substituir",
+        )
+
+        # ------------------------------------------
+        # 4. Remove TODAS as pastas temporárias
+        # ------------------------------------------
+
         pastas_removidas = set()
 
         for versao in grupo["submissoes"]:
@@ -610,7 +701,8 @@ async def callback_compare_approve(
                 continue
 
             print(
-                f"Removendo pasta temporária: {pasta_envio}"
+                f"Removendo pasta temporária: "
+                f"{pasta_envio}"
             )
 
             FileService.remover_pasta_envio(
@@ -628,12 +720,17 @@ async def callback_compare_approve(
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
             text=(
-                "❌ Ocorreu um erro ao salvar os arquivos.\n"
+                "❌ Ocorreu um erro ao salvar "
+                "os arquivos.\n"
                 "A revisão não foi removida da fila."
             ),
         )
 
         return
+
+    # ------------------------------------------
+    # 5. Limpa as mensagens da comparação
+    # ------------------------------------------
 
     await clear_review_messages(
         context=context,
@@ -645,23 +742,36 @@ async def callback_compare_approve(
         chat_id=update.effective_chat.id,
     )
 
-    sucesso = ReviewQueueService.remover_revisao(
-        review_index,
+    # ------------------------------------------
+    # 6. Remove a revisão da fila
+    # ------------------------------------------
+
+    sucesso = (
+        ReviewQueueService.remover_revisao(
+            review_index,
+        )
     )
 
     if not sucesso:
 
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text="⚠️ Esta revisão não existe mais.",
+            text=(
+                "⚠️ Esta revisão não existe mais."
+            ),
         )
 
         return
+
+    # ------------------------------------------
+    # 7. Mensagem final
+    # ------------------------------------------
 
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=(
             "✅ Versão aprovada com sucesso!\n\n"
-            "A comparação foi concluída."
+            "A prova do acervo foi substituída "
+            "pela versão enviada."
         ),
     )

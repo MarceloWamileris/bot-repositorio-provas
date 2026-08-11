@@ -9,6 +9,10 @@ from bot.keyboards.confirm_evaluation_keyboard import (
     confirm_evaluation_keyboard,
 )
 
+from bot.utils.clean_messages import (
+    add_clean_message,
+)
+
 
 async def callback_linked_evaluation(
     update: Update,
@@ -66,4 +70,9 @@ async def callback_linked_evaluation(
         reply_markup=confirm_evaluation_keyboard(
             is_avs=True,
         ),
+    )
+
+    add_clean_message(
+        context,
+        query.message.message_id,
     )

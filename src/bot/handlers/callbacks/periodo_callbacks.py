@@ -9,6 +9,10 @@ from bot.keyboards.disciplina_keyboard import (
     teclado_disciplinas,
 )
 
+from bot.utils.clean_messages import (
+    add_clean_message,
+)
+
 
 async def callback_periodo(
     update: Update,
@@ -23,7 +27,9 @@ async def callback_periodo(
         "periodo:",
     )
 
-    context.user_data["avaliacao"]["periodo"] = periodo
+    context.user_data["avaliacao"]["periodo"] = (
+        periodo
+    )
 
     print("\n========== CADASTRO ==========\n")
 
@@ -31,9 +37,19 @@ async def callback_periodo(
 
     print("\n==============================\n")
 
-    await query.edit_message_text(
+    mensagem = await query.edit_message_text(
         text=MENSAGEM_DISCIPLINA,
         reply_markup=teclado_disciplinas(
             periodo,
         ),
+    )
+
+    print(
+        "[DEBUG PERIODO] ID DA MENSAGEM ATUAL:",
+        mensagem.message_id,
+    )
+
+    add_clean_message(
+        context,
+        mensagem.message_id,
     )

@@ -7,6 +7,9 @@ from services.review_queue_service import (
 from services.session_service import (
     SessionService,
 )
+from services.file_service import (
+    FileService,
+)
 
 
 async def callback_review_request(
@@ -54,6 +57,32 @@ async def callback_review_cancel(
 
     await query.answer()
 
+    pasta_envio = context.user_data.get(
+        "pasta_envio",
+    )
+
+    if pasta_envio is not None:
+
+        print(
+            "\n=================================================="
+        )
+        print(
+            "CANCELAMENTO DE ENVIO"
+        )
+        print(
+            "Removendo pasta temporária:"
+        )
+        print(
+            pasta_envio
+        )
+        print(
+            "=================================================="
+        )
+
+        FileService.remover_pasta_envio(
+            pasta_envio,
+        )
+
     context.user_data.pop(
         "prova_acervo",
         None,
@@ -69,3 +98,4 @@ async def callback_review_cancel(
             "A prova não foi encaminhada para análise."
         )
     )
+

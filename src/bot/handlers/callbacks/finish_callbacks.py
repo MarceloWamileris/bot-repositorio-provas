@@ -2,8 +2,18 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from messages.upload import MENSAGEM_UPLOAD
-from bot.keyboards.finish_keyboard import teclado_finalizar
-from services.processing_service import ProcessingService
+
+from bot.keyboards.finish_keyboard import (
+    teclado_finalizar,
+)
+
+from services.processing_service import (
+    ProcessingService,
+)
+
+from services.upload_cleanup_service import (
+    UploadCleanupService,
+)
 
 
 async def callback_finalizar(
@@ -35,6 +45,12 @@ async def callback_finalizar(
 
     # Remove a mensagem do botão "Finalizar envio"
     await query.delete_message()
+
+    # O upload terminou.
+    # Remove do controle de uploads temporários.
+    UploadCleanupService.finalizar_upload(
+        update.effective_user.id,
+    )
 
     await ProcessingService.iniciar_processamento(
         update,

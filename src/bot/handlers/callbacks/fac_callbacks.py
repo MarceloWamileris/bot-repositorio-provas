@@ -9,6 +9,10 @@ from bot.keyboards.teacher_keyboard import (
     teclado_professores,
 )
 
+from bot.utils.clean_messages import (
+    add_clean_message,
+)
+
 
 async def callback_fac(
     update: Update,
@@ -38,4 +42,9 @@ async def callback_fac(
     await query.edit_message_text(
         text=MENSAGEM_PROFESSOR,
         reply_markup=teclado_professores(),
+    )
+
+    add_clean_message(
+        context,
+        query.message.message_id,
     )

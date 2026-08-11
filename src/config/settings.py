@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import os
 
 
+
 class Settings:
 
     def __init__(self):
@@ -15,6 +16,10 @@ class Settings:
 
         self.ADMIN_ID = int(
             os.getenv("ADMIN_ID")
+        )
+
+        self.TELEGRAM_CHANNEL_ID = int(
+            os.getenv("TELEGRAM_CHANNEL_ID")
         )
 
         self.BASE_STORAGE = Path(

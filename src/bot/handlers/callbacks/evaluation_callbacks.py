@@ -17,12 +17,15 @@ from bot.keyboards.confirm_evaluation_keyboard import (
     confirm_evaluation_keyboard,
 )
 
+from bot.utils.clean_messages import (
+    add_clean_message,
+)
+
 
 async def callback_evaluation(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
 ):
-
     query = update.callback_query
 
     await query.answer()
@@ -53,6 +56,11 @@ async def callback_evaluation(
         await query.edit_message_text(
             text=MENSAGEM_AVALIACAO_VINCULADA,
             reply_markup=linked_evaluation_keyboard(),
+        )
+
+        add_clean_message(
+            context,
+            query.message.message_id,
         )
 
         return
@@ -88,4 +96,9 @@ async def callback_evaluation(
         reply_markup=confirm_evaluation_keyboard(
             is_avs=False,
         ),
+    )
+
+    add_clean_message(
+        context,
+        query.message.message_id,
     )

@@ -7,13 +7,6 @@ def submission_action_keyboard(
     submission_index: int,
     quantidade_versoes: int,
 ):
-    print("=" * 40)
-    print("KEYBOARD")
-    print(f"submission_index = {submission_index}")
-    print(f"quantidade_versoes = {quantidade_versoes}")
-    print(f"condicao proxima = {submission_index < quantidade_versoes - 1}")
-    print("=" * 40)
-
     teclado = []
 
     # -------------------------

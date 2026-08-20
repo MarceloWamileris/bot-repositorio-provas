@@ -31,22 +31,11 @@ async def callback_periodo(
         periodo
     )
 
-    print("\n========== CADASTRO ==========\n")
-
-    print(f"Período: {periodo}")
-
-    print("\n==============================\n")
-
     mensagem = await query.edit_message_text(
         text=MENSAGEM_DISCIPLINA,
         reply_markup=teclado_disciplinas(
             periodo,
         ),
-    )
-
-    print(
-        "[DEBUG PERIODO] ID DA MENSAGEM ATUAL:",
-        mensagem.message_id,
     )
 
     add_clean_message(

@@ -1,4 +1,8 @@
+import logging
+
 from telegram.ext import ContextTypes
+
+logger = logging.getLogger(__name__)
 
 
 def add_clean_message(
@@ -15,10 +19,6 @@ def add_clean_message(
 
         mensagens.append(message_id)
 
-        print(
-            f"[CLEAN] Mensagem registrada: {message_id}"
-        )
-
 
 async def clear_clean_messages(
     context: ContextTypes.DEFAULT_TYPE,
@@ -30,33 +30,20 @@ async def clear_clean_messages(
         [],
     )
 
-    print(
-        "[CLEAN] IDs registrados:",
-        message_ids,
-    )
-
     for message_id in message_ids:
 
         try:
-
-            print(
-                f"[CLEAN] Tentando apagar: {message_id}"
-            )
 
             await context.bot.delete_message(
                 chat_id=chat_id,
                 message_id=message_id,
             )
 
-            print(
-                f"[CLEAN] Apagou: {message_id}"
-            )
-
         except Exception as erro:
 
-            print(
-                f"[CLEAN] Mensagem {message_id} "
-                f"já não existe ou não pôde ser apagada: {erro}"
+            logger.warning(
+                f"Não foi possível apagar a mensagem "
+                f"{message_id}: {erro}"
             )
 
     # Depois do /clean, começa uma nova lista

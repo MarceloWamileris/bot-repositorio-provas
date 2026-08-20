@@ -66,13 +66,6 @@ async def callback_disciplina(
         disciplina["nome"]
     )
 
-    print("\n========== CADASTRO ==========\n")
-
-    print(f"Período: {periodo}")
-    print(f"Disciplina: {disciplina['codigo']}")
-
-    print("\n==============================\n")
-
     # -------------------------------------------------
     # Exceção para FAC
     # -------------------------------------------------

@@ -1,6 +1,8 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 
+import logging
+
 from bot.keyboards.menu_keyboard import (
     menu_keyboard,
 )
@@ -12,6 +14,8 @@ from messages.menu import (
 from bot.utils.clean_messages import (
     add_clean_message,
 )
+
+logger = logging.getLogger(__name__)
 
 
 async def start(
@@ -37,8 +41,9 @@ async def start(
 
         except Exception as erro:
 
-            print(
-                f"ERRO AO APAGAR MENU ANTERIOR: {erro}"
+            logger.warning(
+                f"Não foi possível apagar o menu "
+                f"anterior: {erro}"
             )
 
     # --------------------------------------------------

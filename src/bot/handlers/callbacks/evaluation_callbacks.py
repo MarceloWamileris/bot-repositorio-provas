@@ -38,12 +38,6 @@ async def callback_evaluation(
         "avaliacao"
     ] = avaliacao
 
-    print("\n========== CADASTRO ==========\n")
-
-    print(f"Avaliação: {avaliacao}")
-
-    print("\n==============================\n")
-
     # -------------------------------------------------
     # Fluxo AVS
     # -------------------------------------------------

@@ -51,14 +51,6 @@ async def callback_teacher(
 
     context.user_data["etapa"] = "year"
 
-    print("\n========== CADASTRO ==========\n")
-
-    print(
-        f"Professor: {professor['nome']}"
-    )
-
-    print("\n==============================\n")
-
     mensagem = await query.edit_message_text(
         text=MENSAGEM_ANO,
         reply_markup=teclado_ano(),

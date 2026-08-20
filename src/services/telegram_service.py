@@ -1,6 +1,9 @@
 import asyncio
+import logging
 
 from telegram.error import TimedOut
+
+logger = logging.getLogger(__name__)
 
 
 class TelegramService:
@@ -31,8 +34,8 @@ class TelegramService:
 
             except TimedOut:
 
-                print(
-                    f"[Telegram] Timeout "
+                logger.warning(
+                    f"Timeout ao comunicar com o Telegram "
                     f"(tentativa {tentativa + 1})"
                 )
 
@@ -68,8 +71,8 @@ class TelegramService:
 
             except TimedOut:
 
-                print(
-                    f"[Telegram] Timeout "
+                logger.warning(
+                    f"Timeout ao comunicar com o Telegram "
                     f"(tentativa {tentativa + 1})"
                 )
 
@@ -98,8 +101,8 @@ class TelegramService:
 
             except TimedOut:
 
-                print(
-                    f"[Telegram] Timeout "
+                logger.warning(
+                    f"Timeout ao comunicar com o Telegram "
                     f"(tentativa {tentativa + 1})"
                 )
 

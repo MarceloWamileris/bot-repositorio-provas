@@ -35,12 +35,6 @@ async def callback_semester(
 
     context.user_data["etapa"] = "shift"
 
-    print("\n========== CADASTRO ==========\n")
-
-    print(f"Semestre: {semestre}")
-
-    print("\n==============================\n")
-
     await query.edit_message_text(
         text=MENSAGEM_TURNO,
         reply_markup=shift_keyboard(),

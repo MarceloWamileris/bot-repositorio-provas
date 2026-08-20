@@ -1,4 +1,5 @@
 import json
+import logging
 import time
 from pathlib import Path
 from threading import Lock
@@ -6,6 +7,8 @@ from threading import Lock
 from services.file_service import (
     FileService,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class UploadCleanupService:
@@ -23,10 +26,6 @@ class UploadCleanupService:
         cls,
         context=None,
     ):
-
-        print("=" * 50)
-        print("LIMPANDO EXPIRADOS")
-        print("=" * 50)
 
         with cls._lock:
 
@@ -46,7 +45,7 @@ class UploadCleanupService:
                 time.time()
             )
 
-            TTL = 3600  # 1 minuto para teste
+            TTL = 3600  
             # TTL = 3600  # 1 hora em produção
 
             usuarios_expirados = []
@@ -58,46 +57,24 @@ class UploadCleanupService:
                     - dados["criado_em"]
                 )
 
-                print("-" * 40)
-                print(
-                    f"Usuário: {usuario_id}"
-                )
-                print(
-                    f"Pasta: {dados['pasta']}"
-                )
-                print(
-                    f"Idade: {idade} segundos"
-                )
-
                 if idade > TTL:
-
-                    print(
-                        ">>> EXPIRADO <<<"
-                    )
 
                     usuarios_expirados.append(
                         usuario_id,
                     )
 
-                else:
+            if usuarios_expirados:
 
-                    print(
-                        "Ainda válido."
-                    )
-
-            print("=" * 50)
-            print("UPLOADS EXPIRADOS:")
-            print(usuarios_expirados)
-            print("=" * 50)
+                logger.info(
+                    f"Removendo {len(usuarios_expirados)} "
+                    f"upload(s) expirado(s): "
+                    f"{usuarios_expirados}"
+                )
 
             for usuario_id in usuarios_expirados:
 
                 pasta = Path(
                     status[usuario_id]["pasta"]
-                )
-
-                print(
-                    f"Removendo pasta: {pasta}"
                 )
 
                 FileService.remover_pasta_envio(
@@ -123,13 +100,6 @@ class UploadCleanupService:
                         indent=4,
                         ensure_ascii=False,
                     )
-
-                print("=" * 50)
-                print(
-                    "STATUS.JSON ATUALIZADO"
-                )
-                print(status)
-                print("=" * 50)
 
     @classmethod
     def registrar_upload(
@@ -172,11 +142,6 @@ class UploadCleanupService:
                     ensure_ascii=False,
                 )
 
-            print("=" * 50)
-            print("UPLOAD REGISTRADO")
-            print(status)
-            print("=" * 50)
-
     @classmethod
     def finalizar_upload(
         cls,
@@ -215,23 +180,8 @@ class UploadCleanupService:
                     ensure_ascii=False,
                 )
 
-            print("=" * 50)
-            print(
-                "UPLOAD REMOVIDO DO STATUS.JSON"
-            )
-            print(status)
-            print("=" * 50)
-
     @classmethod
     def _garantir_status(cls):
-
-        print("=" * 50)
-        print("GARANTINDO STATUS.JSON")
-        print(
-            "CAMINHO:",
-            cls.STATUS_FILE.resolve(),
-        )
-        print("=" * 50)
 
         cls.STATUS_FILE.parent.mkdir(
             parents=True,
@@ -239,10 +189,6 @@ class UploadCleanupService:
         )
 
         if not cls.STATUS_FILE.exists():
-
-            print(
-                "CRIANDO STATUS.JSON"
-            )
 
             with open(
                 cls.STATUS_FILE,
@@ -256,10 +202,4 @@ class UploadCleanupService:
                     indent=4,
                     ensure_ascii=False,
                 )
-
-        else:
-
-            print(
-                "STATUS.JSON JÁ EXISTE"
-            )
 

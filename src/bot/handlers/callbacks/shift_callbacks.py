@@ -29,12 +29,6 @@ async def callback_shift(
 
     context.user_data["etapa"] = "evaluation"
 
-    print("\n========== CADASTRO ==========\n")
-
-    print(f"Turno: {turno}")
-
-    print("\n==============================\n")
-
     await query.edit_message_text(
         text=MENSAGEM_AVALIACAO,
         reply_markup=evaluation_keyboard(),

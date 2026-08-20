@@ -1,4 +1,4 @@
-import traceback
+import logging
 
 from telegram import Update
 from telegram.ext import ContextTypes
@@ -39,6 +39,8 @@ from services.storage_service import (
 from services.file_service import (
     FileService,
 )
+
+logger = logging.getLogger(__name__)
 
 
 MSG_REVISAO_INDISPONIVEL = (
@@ -294,21 +296,6 @@ async def mostrar_submissao(
                 context,
                 msg.message_id,
             )
-
-    # ------------------------
-    # Debug
-    # ------------------------
-
-    print("=" * 40)
-    print("DEBUG")
-    print(f"review_index     = {review_index}")
-    print(f"submission_index = {submission_index}")
-    print(f"total_versoes    = {total_versoes}")
-    print(
-        f"len(submissoes)  = "
-        f"{len(grupo['submissoes'])}"
-    )
-    print("=" * 40)
 
     # ------------------------
     # Botões
@@ -600,11 +587,6 @@ async def callback_submission_approve(
                 submissao["arquivos"][0]["caminho"].parent
             )
 
-            print("=" * 60)
-            print("APAGANDO PASTA DA VERSÃO APROVADA")
-            print(pasta_envio)
-            print("=" * 60)
-
             FileService.remover_pasta_envio(
                 pasta_envio,
             )
@@ -615,28 +597,11 @@ async def callback_submission_approve(
 
         if havia_multiplas_versoes:
 
-            print("=" * 60)
-            print(
-                "TOTAL DE VERSÕES:",
-                len(grupo["submissoes"]),
-            )
-            print(
-                "VERSÃO APROVADA:",
-                submission_index,
-            )
-            print("=" * 60)
-
             for indice, outra_submissao in enumerate(
                 grupo["submissoes"]
             ):
 
-                print("-" * 40)
-                print("ITERAÇÃO:", indice)
-
                 if indice == submission_index:
-                    print(
-                        ">> Pulando versão aprovada"
-                    )
                     continue
 
                 if outra_submissao["arquivos"]:
@@ -647,24 +612,17 @@ async def callback_submission_approve(
                         ].parent
                     )
 
-                    print(
-                        ">> APAGANDO PASTA DA "
-                        "VERSÃO DESCARTADA"
-                    )
-                    print(pasta_envio)
-
                     FileService.remover_pasta_envio(
                         pasta_envio,
                     )
 
-                else:
-
-                    print(
-                        ">> Esta submissão não "
-                        "possui arquivos."
-                    )
-
     except Exception:
+
+        logger.error(
+            "Erro ao salvar os arquivos ao "
+            "aprovar submissão.",
+            exc_info=True,
+        )
 
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
@@ -674,8 +632,6 @@ async def callback_submission_approve(
                 "A revisão não foi removida da fila."
             ),
         )
-
-        traceback.print_exc()
 
         return
 

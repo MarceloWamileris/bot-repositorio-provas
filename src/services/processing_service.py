@@ -24,30 +24,11 @@ class ProcessingService:
             [],
         )
 
-        print("\n========== PROCESSAMENTO ==========\n")
-
-        print(f"Usuário: {update.effective_user.id}")
-        print(f"Arquivos recebidos: {len(arquivos)}\n")
-
-        for indice, arquivo in enumerate(arquivos, start=1):
-
-            print(f"[{indice}] {arquivo['nome']}")
-
-            if arquivo["tipo"] == "pdf":
-
-                print("→ PDF identificado.")
-
-            elif arquivo["tipo"] == "imagem":
-
-                print("→ Imagem identificada.")
+        for arquivo in arquivos:
 
             await OCRService.extrair_texto(
                 arquivo["caminho"],
             )
-
-            print()
-
-        print("==================================\n")
 
         context.user_data["avaliacao"] = nova_avaliacao()
 

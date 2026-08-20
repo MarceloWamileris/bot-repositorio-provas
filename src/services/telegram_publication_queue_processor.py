@@ -1,5 +1,5 @@
 import asyncio
-import traceback
+import logging
 from pathlib import Path
 
 from services.telegram_publication_queue_service import (
@@ -9,6 +9,8 @@ from services.telegram_publication_queue_service import (
 from services.telegram_publication_service import (
     TelegramPublicationService,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class TelegramPublicationQueueProcessor:
@@ -62,15 +64,11 @@ class TelegramPublicationQueueProcessor:
 
                 except Exception:
 
-                    print("=" * 60)
-                    print("ERRO AO PUBLICAR AVALIAÇÃO")
-                    print(
-                        f"Índice da publicação: "
-                        f"{indice}"
+                    logger.error(
+                        f"Erro ao publicar avaliação no "
+                        f"Telegram (índice: {indice})",
+                        exc_info=True,
                     )
-                    print("=" * 60)
-
-                    traceback.print_exc()
 
                     # Mantém a publicação no JSON
                     # para uma próxima tentativa.
@@ -84,9 +82,7 @@ class TelegramPublicationQueueProcessor:
 
                 if removida:
 
-                    print("=" * 60)
-                    print("PUBLICAÇÃO REMOVIDA DA FILA")
-                    print(
-                        f"Índice: {indice}"
+                    logger.info(
+                        f"Publicação removida da fila "
+                        f"(índice: {indice})"
                     )
-                    print("=" * 60)

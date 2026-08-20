@@ -18,7 +18,7 @@ from bot.utils.review_messages import (
     clear_review_acervo_messages,
 )
 
-import traceback
+import logging
 
 from services.storage_service import (
     StorageService,
@@ -35,6 +35,8 @@ from services.telegram_publication_queue_service import (
 from services.github_publication_queue_service import (
     GitHubPublicationQueueService,
 )
+
+logger = logging.getLogger(__name__)
 
 
 # ------------------------------------------------------
@@ -98,11 +100,6 @@ async def mostrar_acervo(
     paginas = ProofService.obter_paginas(
         avaliacao,
     )
-
-    print("=" * 50)
-    print("PAGINAS ENCONTRADAS:")
-    print(paginas)
-    print("=" * 50)
 
     if len(paginas) == 0:
         return
@@ -638,11 +635,6 @@ async def callback_compare_approve(
 
         return
 
-    print("=" * 50)
-    print("VERSÕES EXISTENTES")
-    print(len(grupo["submissoes"]))
-    print("=" * 50)
-
     try:
 
         # ------------------------------------------
@@ -659,10 +651,10 @@ async def callback_compare_approve(
             )
         )
 
-        print("=" * 50)
-        print("ARQUIVOS SALVOS COM SUCESSO")
-        print(arquivos_salvos)
-        print("=" * 50)
+        logger.info(
+            f"Arquivos salvos com sucesso: "
+            f"{arquivos_salvos}"
+        )
 
         # ------------------------------------------
         # 2. Adiciona publicação ao Telegram
@@ -700,11 +692,6 @@ async def callback_compare_approve(
             if pasta_envio in pastas_removidas:
                 continue
 
-            print(
-                f"Removendo pasta temporária: "
-                f"{pasta_envio}"
-            )
-
             FileService.remover_pasta_envio(
                 pasta_envio,
             )
@@ -715,7 +702,11 @@ async def callback_compare_approve(
 
     except Exception:
 
-        traceback.print_exc()
+        logger.error(
+            "Erro ao salvar os arquivos da "
+            "submissão comparada.",
+            exc_info=True,
+        )
 
         await context.bot.send_message(
             chat_id=update.effective_chat.id,

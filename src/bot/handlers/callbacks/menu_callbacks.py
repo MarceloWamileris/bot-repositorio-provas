@@ -36,12 +36,6 @@ async def callback_enviar(
 
     await query.answer()
 
-    # DEBUG
-    print(
-        "[DEBUG ENVIAR] ID:",
-        query.message.message_id,
-    )
-
     # Limpa qualquer envio anterior
     context.user_data["arquivos"] = []
 

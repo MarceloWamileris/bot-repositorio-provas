@@ -1,8 +1,12 @@
 from pathlib import Path
 
+import logging
+
 from telegram import Bot
 
 from config.settings import settings
+
+logger = logging.getLogger(__name__)
 
 
 class TelegramPublicationService:
@@ -77,15 +81,49 @@ class TelegramPublicationService:
             text=texto,
         )
 
-        print("=" * 50)
-        print("PUBLICAÇÃO NO TELEGRAM")
-        print("=" * 50)
-        print("PUBLICAÇÃO REALIZADA!")
-        print(
-            f"ID da mensagem: "
-            f"{mensagem.message_id}"
+        logger.info(
+            f"Avaliação publicada no Telegram "
+            f"(ID: {mensagem.message_id})"
         )
-        print("=" * 50)
+
+        # --------------------------------------------------
+        # Define o código usado no nome do arquivo
+        # --------------------------------------------------
+
+        if (
+            avaliacao["codigo_disciplina"]
+            == "1FAC"
+        ):
+
+            codigo_arquivo = (
+                avaliacao["turma_fac"]
+            )
+
+        else:
+
+            codigo_arquivo = (
+                avaliacao["codigo_disciplina"][1:]
+            )
+
+        # --------------------------------------------------
+        # Define o nome da avaliação no arquivo
+        # --------------------------------------------------
+
+        if (
+            avaliacao["avaliacao"]
+            == "AVS"
+        ):
+
+            nome_avaliacao = (
+                f"AVS-"
+                f"{avaliacao['avaliacao_vinculada']}"
+            )
+
+        else:
+
+            nome_avaliacao = (
+                avaliacao["avaliacao"]
+            )
 
         # --------------------------------------------------
         # Publica os arquivos
@@ -93,7 +131,9 @@ class TelegramPublicationService:
 
         for arquivo in sorted(arquivos):
 
-            with arquivo.open("rb") as arquivo_aberto:
+            with arquivo.open(
+                "rb"
+            ) as arquivo_aberto:
 
                 if arquivo.suffix.lower() in (
                     ".jpg",
@@ -108,13 +148,22 @@ class TelegramPublicationService:
 
                 else:
 
+                    nome_arquivo = (
+                        f"{codigo_arquivo}_"
+                        f"{nome_avaliacao}_"
+                        f"{avaliacao['ano']}-"
+                        f"{avaliacao['semestre']}_"
+                        f"{avaliacao['turno']}_"
+                        f"{arquivo.name}"
+                    )
+
                     mensagem = await bot.send_document(
                         chat_id=settings.TELEGRAM_CHANNEL_ID,
                         document=arquivo_aberto,
+                        filename=nome_arquivo,
                     )
 
-            print(
-                f"Arquivo publicado: "
-                f"{arquivo.name} "
+            logger.info(
+                f"Arquivo publicado: {arquivo.name} "
                 f"(ID: {mensagem.message_id})"
             )

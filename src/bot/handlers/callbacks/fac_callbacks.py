@@ -31,14 +31,6 @@ async def callback_fac(
         turma
     )
 
-    print("\n========== CADASTRO ==========\n")
-
-    print(
-        f"Turma FAC: {turma}"
-    )
-
-    print("\n==============================\n")
-
     await query.edit_message_text(
         text=MENSAGEM_PROFESSOR,
         reply_markup=teclado_professores(),

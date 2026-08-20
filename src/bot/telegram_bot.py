@@ -1,8 +1,12 @@
+import logging
+
 from telegram.ext import (
     ApplicationBuilder,
 )
 
 from config.settings import settings
+
+logger = logging.getLogger(__name__)
 
 from bot.register_handlers import (
     register_handlers,

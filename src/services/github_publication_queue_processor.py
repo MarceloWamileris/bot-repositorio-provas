@@ -1,5 +1,5 @@
 import asyncio
-import traceback
+import logging
 
 from services.github_publication_queue_service import (
     GitHubPublicationQueueService,
@@ -8,6 +8,8 @@ from services.github_publication_queue_service import (
 from services.github_sync_service import (
     GitHubSyncService,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class GitHubPublicationQueueProcessor:
@@ -63,15 +65,11 @@ class GitHubPublicationQueueProcessor:
 
                 except Exception:
 
-                    print("=" * 60)
-                    print("ERRO AO SINCRONIZAR COM GITHUB")
-                    print(
-                        f"Índice da publicação: "
-                        f"{indice}"
+                    logger.error(
+                        f"Erro ao sincronizar publicação "
+                        f"com o GitHub (índice: {indice})",
+                        exc_info=True,
                     )
-                    print("=" * 60)
-
-                    traceback.print_exc()
 
                     # Mantém a publicação no JSON
                     # para uma próxima tentativa.
@@ -85,9 +83,7 @@ class GitHubPublicationQueueProcessor:
 
                 if removida:
 
-                    print("=" * 60)
-                    print("SINCRONIZAÇÃO REMOVIDA DA FILA")
-                    print(
-                        f"Índice: {indice}"
+                    logger.info(
+                        f"Sincronização removida da fila "
+                        f"(índice: {indice})"
                     )
-                    print("=" * 60)

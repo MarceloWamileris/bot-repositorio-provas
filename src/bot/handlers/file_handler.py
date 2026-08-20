@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import logging
+
 from telegram import Update
 from telegram.ext import ContextTypes
 
@@ -14,6 +16,8 @@ from bot.utils.validar_assinatura import validar_assinatura
 from bot.utils.clean_messages import (
     add_clean_message,
 )
+
+logger = logging.getLogger(__name__)
 
 
 EXTENSOES_PERMITIDAS = {
@@ -40,16 +44,6 @@ async def receber_arquivo(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
 ):
-
-    # ------------------------
-    # DEBUG
-    # ------------------------
-    print("=" * 60)
-    print("DEBUG UPDATE")
-    print("document:", update.message.document)
-    print("photo:", update.message.photo)
-    print("text:", update.message.text)
-    print("=" * 60)
 
     if context.user_data.get("etapa") != "upload":
 
@@ -135,13 +129,6 @@ async def receber_arquivo(
             .suffix
             .lower()
         )
-
-        # DEBUG
-        print("=" * 50)
-        print("ARQUIVO RECEBIDO")
-        print(f"Nome original: {nome_original}")
-        print(f"Extensão: {extensao}")
-        print("=" * 50)
 
         # Validação das extensões
         if extensao not in EXTENSOES_PERMITIDAS:
@@ -271,8 +258,9 @@ async def receber_arquivo(
 
     except Exception as erro:
 
-        print(
-            f"ERRO AO SALVAR: {erro}"
+        logger.error(
+            f"Erro ao salvar arquivo enviado: {erro}",
+            exc_info=True,
         )
 
         await update.message.reply_text(
@@ -336,8 +324,9 @@ async def receber_arquivo(
 
         except Exception as erro:
 
-            print(
-                f"ERRO AO APAGAR MENSAGEM: {erro}"
+            logger.warning(
+                f"Não foi possível apagar a "
+                f"mensagem: {erro}"
             )
 
         # Remove o ID que já foi tratado

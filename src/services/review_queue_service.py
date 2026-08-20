@@ -1,10 +1,12 @@
-from pprint import pprint
+import logging
 
 from data.review_queue import REVIEW_QUEUE
 
 from services.review_queue_storage_service import (
     ReviewQueueStorageService,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class ReviewQueueService:
@@ -35,21 +37,10 @@ class ReviewQueueService:
 
         ReviewQueueStorageService.salvar()
 
-        print("\n===== SUBMISSÃO ADICIONADA =====")
-
-        pprint(
-            REVIEW_QUEUE[-1]
+        logger.info(
+            f"Submissão adicionada à fila de revisão "
+            f"(revisões pendentes: {len(REVIEW_QUEUE)})"
         )
-
-        print("===============================\n")
-
-        print("\n========== FILA DE REVISÃO ==========\n")
-
-        print(
-            f"Revisões pendentes: {len(REVIEW_QUEUE)}"
-        )
-
-        print("\n=====================================\n")
 
     @classmethod
     def listar(cls):
@@ -117,10 +108,6 @@ class ReviewQueueService:
 
         grupos = cls.listar()
 
-        print("\n========== GRUPOS ANTES ==========")
-        pprint(grupos)
-        print("==================================")
-
         grupo_atual = next(
             (
                 grupo
@@ -131,7 +118,10 @@ class ReviewQueueService:
         )
 
         if grupo_atual is None:
-            print("Grupo atual não encontrado.")
+            logger.warning(
+                "remover_submissao: grupo atual não "
+                "encontrado na fila de revisão."
+            )
             return False
 
         chave = (
@@ -163,37 +153,27 @@ class ReviewQueueService:
         )
 
         if grupo is None:
-            print("Grupo pela chave não encontrado.")
+            logger.warning(
+                "remover_submissao: grupo pela chave "
+                "não encontrado."
+            )
             return False
 
         if submission_index >= len(grupo["submissoes"]):
-            print("Índice da submissão inválido.")
+            logger.warning(
+                "remover_submissao: índice da "
+                "submissão inválido "
+                f"({submission_index})."
+            )
             return False
 
         submissao = grupo["submissoes"][submission_index]
-
-        print("\n========== FILA ANTES DO POP ==========")
-        pprint(REVIEW_QUEUE)
-        print("=======================================")
-
-        print(
-            f"\nRemovendo review_queue_index = "
-            f"{submissao['review_queue_index']}"
-        )
 
         REVIEW_QUEUE.pop(
             submissao["review_queue_index"]
         )
 
-        print("\n========== FILA DEPOIS DO POP ==========")
-        pprint(REVIEW_QUEUE)
-        print("========================================")
-
         ReviewQueueStorageService.salvar()
-
-        print("\n========== GRUPOS DEPOIS ==========")
-        pprint(cls.listar())
-        print("===================================")
 
         return True
 

@@ -63,22 +63,6 @@ async def callback_review_cancel(
 
     if pasta_envio is not None:
 
-        print(
-            "\n=================================================="
-        )
-        print(
-            "CANCELAMENTO DE ENVIO"
-        )
-        print(
-            "Removendo pasta temporária:"
-        )
-        print(
-            pasta_envio
-        )
-        print(
-            "=================================================="
-        )
-
         FileService.remover_pasta_envio(
             pasta_envio,
         )

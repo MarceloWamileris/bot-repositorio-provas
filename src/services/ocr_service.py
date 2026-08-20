@@ -6,14 +6,6 @@ class OCRService:
         caminho,
     ):
 
-        print(
-            f"OCR: {caminho}"
-        )
-
         texto = ""
-
-        print(
-            f"Texto extraído: {texto}"
-        )
 
         return texto

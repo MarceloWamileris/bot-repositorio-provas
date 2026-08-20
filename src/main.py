@@ -1,4 +1,5 @@
 from config.settings import settings
+from config.logging_config import configurar_logging
 
 from bot.telegram_bot import TelegramBot
 
@@ -8,6 +9,8 @@ from services.review_queue_storage_service import (
 
 
 def main():
+
+    configurar_logging()
 
     ReviewQueueStorageService.carregar()
 

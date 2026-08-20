@@ -35,14 +35,6 @@ async def callback_linked_evaluation(
         "confirm_evaluation"
     )
 
-    print("\n========== CADASTRO ==========\n")
-
-    print(
-        f"Avaliação vinculada: {avaliacao_vinculada}"
-    )
-
-    print("\n==============================\n")
-
     dados = context.user_data["avaliacao"]
 
     turma = ""
